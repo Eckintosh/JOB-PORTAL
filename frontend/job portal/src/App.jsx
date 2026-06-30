@@ -27,7 +27,7 @@ export const App = () => {
     <div >
       <Router>
         <Routes>
-          {/!* public routes */}
+          {/* public routes */}
           <Route path="/" element={<LandingPage/>} />
           <Route path="/signup" element={<SignUp/>} />
           <Route path="/login" element={<Login/>} />
@@ -47,7 +47,7 @@ export const App = () => {
             <Route path="/company-profile" element={<EmployerProfilePage/>} />
           </Route>
 
-          {/!* Catch all routes */}
+          {/* Catch all routes */}
           <Route path="*" element={<Navigate to="/" replace />} />
 
         </Routes>
