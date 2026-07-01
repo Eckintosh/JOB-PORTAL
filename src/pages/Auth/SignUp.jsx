@@ -160,6 +160,12 @@ const SignUp = () => {
 
     // Simulate Auth Register API Request
     setTimeout(() => {
+      localStorage.setItem("user", JSON.stringify({
+        fullName: formData.fullName,
+        role: formData.role,
+        email: formData.email
+      }));
+
       setFormState(prev => ({
         ...prev,
         loading: false,

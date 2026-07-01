@@ -1,12 +1,23 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Search, ArrowRight, Users, Building2, TrendingUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const Hero = () => {
-  const isAuthenticated = true;
-  const user = { fullName: "Mark", role: "employer" };
-
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+      setIsAuthenticated(true);
+    } else {
+      setUser(null);
+      setIsAuthenticated(false);
+    }
+  }, []);
 
   const stats = [
     { icon: Users, label: 'Active Users', value: '2.4M+' },
@@ -47,7 +58,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-12"
+            className={`flex flex-col sm:flex-row justify-center items-center gap-4 ${isAuthenticated ? 'mb-12' : 'mb-4'}`}
           >
             <motion.button
               whileHover={{ scale: 1.02 }}
@@ -75,6 +86,32 @@ const Hero = () => {
               Post a Job
             </motion.button>
           </motion.div>
+
+          {/* Subtle login/signup options if not logged in */}
+          {!isAuthenticated && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+              className="flex justify-center items-center gap-2 text-sm font-semibold text-secondary/60 mb-12"
+            >
+              <span>Already have an account?</span>
+              <button
+                onClick={() => navigate("/login")}
+                className="text-primary hover:text-orange-600 hover:underline cursor-pointer font-bold"
+              >
+                Log In
+              </button>
+              <span className="text-secondary/30">•</span>
+              <span>New to the platform?</span>
+              <button
+                onClick={() => navigate("/signup")}
+                className="text-primary hover:text-orange-600 hover:underline cursor-pointer font-bold"
+              >
+                Register
+              </button>
+            </motion.div>
+          )}
 
           {/* Stats */}
           <motion.div

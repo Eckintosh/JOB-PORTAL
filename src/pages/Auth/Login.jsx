@@ -104,6 +104,13 @@ const Login = () => {
 
     // Simulate Auth API Request
     setTimeout(() => {
+      const role = formData.email.includes("employer") ? "employer" : "candidate";
+      localStorage.setItem("user", JSON.stringify({
+        fullName: formData.email.split('@')[0],
+        role: role,
+        email: formData.email
+      }));
+
       setFormState(prev => ({
         ...prev,
         loading: false,

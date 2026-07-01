@@ -1,10 +1,29 @@
-import {motion} from "framer-motion";
-import {useNavigate} from "react-router-dom";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
-    const isAuthenticated = true;
-    const user = {fullName: "Eckintosh", role:"employer"};
     const navigate = useNavigate();
+    const [user, setUser] = useState(null);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));
+            setIsAuthenticated(true);
+        } else {
+            setUser(null);
+            setIsAuthenticated(false);
+        }
+    }, []);
+
+    const handleLogout = () => {
+        localStorage.removeItem("user");
+        setUser(null);
+        setIsAuthenticated(false);
+        navigate("/");
+    };
 
   return <motion.header
     initial={{ y: -20, opacity: 0 }}
@@ -44,21 +63,37 @@ const Header = () => {
             {/* authentication buttons */}
             <div className='flex items-center space-x-3'>
                 {isAuthenticated ? (
-                    <div className='flex items-center space-x-3'>
-                        <span className='text-gray-700'>Welcome, {user?.fullName}</span>
-                        <a href={
-                            user?.role === "employer"
-                            ? "/employer-dashboard" : "/find-jobs"
-
-                        }
-                        className='bg-linear-to-r from-primary to-secondary text-white px-6 py-2 rounded-md hover:from-primary hover:to-secondary transition-colors' > 
-                        Dashboard
-                        </a>
+                    <div className='flex items-center space-x-4'>
+                        <span className='text-gray-700 font-medium'>Welcome, {user?.fullName}</span>
+                        <button
+                            onClick={() => {
+                                navigate(user?.role === "employer" ? "/employer-dashboard" : "/find-jobs");
+                            }}
+                            className='bg-primary text-white px-5 py-2 rounded-md hover:bg-orange-600 transition-colors font-semibold cursor-pointer text-sm shadow-xs'
+                        > 
+                            Dashboard
+                        </button>
+                        <button
+                            onClick={handleLogout}
+                            className='text-gray-600 hover:text-gray-900 transition-colors font-semibold cursor-pointer text-sm'
+                        >
+                            Logout
+                        </button>
                     </div>
                 ) : (
                     <>
-                    <a href="/login" className="bg-linear-to-r from-primary to-secondary text-white px-6 py-2 rounded-md hover:from-primary hover:to-secondary transition-colors">Login</a>
-                    <a href="/signup" className="text-gray-600 hover:text-gray-900 transition-colors font-medium cursor-pointer">Sign Up</a>
+                    <button
+                        onClick={() => navigate("/login")}
+                        className="bg-primary text-white px-5 py-2 rounded-md hover:bg-orange-600 transition-colors font-semibold cursor-pointer text-sm shadow-xs"
+                    >
+                        Login
+                    </button>
+                    <button
+                        onClick={() => navigate("/signup")}
+                        className="text-gray-600 hover:text-gray-950 transition-colors font-semibold cursor-pointer text-sm"
+                    >
+                        Sign Up
+                    </button>
                     </>
                 )}
 

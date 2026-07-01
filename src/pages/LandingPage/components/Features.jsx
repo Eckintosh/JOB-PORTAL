@@ -24,24 +24,24 @@ const iconMap = {
 
 const accentClasses = {
   primary: {
-    text: "text-blue-600",
-    line: "bg-blue-600",
-    icon: "bg-blue-50 text-blue-600",
+    text: "text-primary",
+    line: "bg-primary",
+    icon: "bg-primary/10 text-primary",
   },
   secondary: {
-    text: "text-purple-600",
-    line: "bg-purple-500",
-    icon: "bg-purple-50 text-purple-600",
+    text: "text-secondary",
+    line: "bg-secondary",
+    icon: "bg-secondary/10 text-secondary",
   },
   blue: {
-    text: "text-blue-600",
-    line: "bg-blue-600",
-    icon: "bg-blue-50 text-blue-600",
+    text: "text-primary",
+    line: "bg-primary",
+    icon: "bg-primary/10 text-primary",
   },
   purple: {
-    text: "text-purple-600",
-    line: "bg-purple-500",
-    icon: "bg-purple-50 text-purple-600",
+    text: "text-secondary",
+    line: "bg-secondary",
+    icon: "bg-secondary/10 text-secondary",
   },
 };
 
@@ -90,7 +90,7 @@ const Features = () => {
         >
           <h2 className="text-4xl font-bold tracking-normal text-gray-950 md:text-5xl lg:text-6xl">
             {landingFeatures.title}{" "}
-            <span className="text-blue-600">{landingFeatures.highlightedTitle}</span>
+            <span className="text-primary">{landingFeatures.highlightedTitle}</span>
           </h2>
           <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-gray-600 md:text-xl">
             {landingFeatures.subtitle}
