@@ -106,23 +106,27 @@ const Hero = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.8 }}
-              className="flex justify-center items-center gap-2 text-sm font-semibold text-secondary/60 mb-12"
+              className="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-4 text-sm font-semibold text-secondary/60 mb-12"
             >
-              <span>Already have an account?</span>
-              <button
-                onClick={() => navigate("/login")}
-                className="text-primary hover:text-orange-600 hover:underline cursor-pointer font-bold"
-              >
-                Log In
-              </button>
-              <span className="text-secondary/30">•</span>
-              <span>New to the platform?</span>
-              <button
-                onClick={() => navigate("/signup")}
-                className="text-primary hover:text-orange-600 hover:underline cursor-pointer font-bold"
-              >
-                Register
-              </button>
+              <div className="flex items-center gap-1.5">
+                <span>Already have an account?</span>
+                <button
+                  onClick={() => navigate("/login")}
+                  className="text-primary hover:text-orange-600 hover:underline cursor-pointer font-bold"
+                >
+                  Log In
+                </button>
+              </div>
+              <span className="hidden sm:inline text-secondary/30">•</span>
+              <div className="flex items-center gap-1.5">
+                <span>New to the platform?</span>
+                <button
+                  onClick={() => navigate("/signup")}
+                  className="text-primary hover:text-orange-600 hover:underline cursor-pointer font-bold"
+                >
+                  Register
+                </button>
+              </div>
             </motion.div>
           )}
 
