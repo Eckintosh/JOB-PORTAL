@@ -36,7 +36,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.8 }}
-            className=""
+            className="text-xl md:text-xl lg:text-2xl text-gray-600 mb-16 mx-auto leading-relaxed"
           >
             Connect talented professionals with innovative companies.
             Your next career move or perfect candidate is just one click away.
@@ -47,23 +47,23 @@ const Hero = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className=""
+            className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-12"
           >
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className=""
+              className="group bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-4 rounded-xl flex items-center gap-2 hover:shadow-lg transition-shadow duration-300"
               onClick={() => navigate("/find-jobs")}
             >
-              <Search className="" />
+              <Search className="w-5 h-5" />
               <span>Find Jobs</span>
-              <ArrowRight className="" />
+              <ArrowRight className="w-5 h-5 font-bold group-hover:translate-x-1 transition-transform duration-300" />
             </motion.button>
 
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className=""
+              className="bg-white font-bold border border-gray-300 text-gray-800 px-6 py-4 rounded-xl flex items-center gap-2 hover:shadow-lg transition-shadow duration-300"
               onClick={() => {
                 navigate(
                   isAuthenticated && user?.role === "employer"
@@ -81,7 +81,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.8 }}
-            className=""
+            className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-2xl max-auto items-center justify-center mx-auto"
           >
             {stats.map((stat, index) => (
               <motion.div
@@ -89,13 +89,13 @@ const Hero = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 + index * 0.1, duration: 0.6 }}
-                className=""
+                className="flex flex-col items-center justify-center text-center p-4 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors duration-300"
               >
-                <div className="">
-                  <stat.icon className="" />
+                <div className="text-3xl font-bold text-blue-500 mb-2">
+                  <stat.icon className="w-8 h-8" />
                 </div>
-                <div className="">{stat.value}</div>
-                <div className="">{stat.label}</div>
+                <div className="text-2xl font-bold text-gray-800 mb-1">{stat.value}</div>
+                <div className="text-gray-600">{stat.label}</div>
               </motion.div>
             ))}
           </motion.div>
@@ -103,10 +103,10 @@ const Hero = () => {
       </div>
 
       {/* Subtle Background Elements */}
-      <div className="">
-        <div className="" />
-        <div className="" />
-        <div className="" />
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-32 h-32 bg-blue-100 rounded-full blur-2xl opacity-30" />
+        <div className="absolute top-1/2 right-10 w-24 h-24 bg-purple-100 rounded-full blur-2xl opacity-30" />
+        <div className="absolute bottom-20 left-1/2 w-20 h-20 bg-green-100 rounded-full blur-2xl opacity-30" />
       </div>
     </section>
   );
