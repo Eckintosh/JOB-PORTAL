@@ -26,8 +26,21 @@ const Hero = () => {
   ];
 
   return (
-    <section className="pt-24 pb-16 bg-tertiary min-h-screen flex items-center">
-      <div className="container mx-auto px-4">
+    <section 
+      className="relative pt-24 pb-16 min-h-screen flex items-center bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: "url('/bg.jpg')" }}
+    >
+      {/* Background Overlay */}
+      <div className="absolute inset-0 bg-white/90 z-0" />
+
+      {/* Subtle Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-20 left-10 w-32 h-32 bg-primary/15 rounded-full blur-2xl opacity-60" />
+        <div className="absolute top-1/2 right-10 w-24 h-24 bg-secondary/10 rounded-full blur-2xl opacity-50" />
+        <div className="absolute bottom-20 left-1/2 w-20 h-20 bg-primary/10 rounded-full blur-2xl opacity-60" />
+      </div>
+
+      <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           {/* Main Heading */}
           <motion.h1
@@ -142,12 +155,6 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* Subtle Background Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-32 h-32 bg-primary/15 rounded-full blur-2xl opacity-60" />
-        <div className="absolute top-1/2 right-10 w-24 h-24 bg-secondary/10 rounded-full blur-2xl opacity-50" />
-        <div className="absolute bottom-20 left-1/2 w-20 h-20 bg-primary/10 rounded-full blur-2xl opacity-60" />
-      </div>
     </section>
   );
 };
