@@ -15,7 +15,7 @@ const Hero = () => {
   ];
 
   return (
-    <section className="pt-24 pb-16 bg-white min-h-screen flex items-center">
+    <section className="pt-24 pb-16 bg-tertiary min-h-screen flex items-center">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto text-center">
           {/* Main Heading */}
@@ -26,7 +26,7 @@ const Hero = () => {
             className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight pt-10"
           >
             Find Your Dream Job or
-            <span className="block bg-gradient-to-r from-blue-500 to-purple-600 text-transparent bg-clip-text">
+            <span className="block bg-gradient-to-r from-primary to-[#973203] text-transparent bg-clip-text">
               Perfect Hire
             </span>
           </motion.h1>
@@ -36,7 +36,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.8 }}
-            className="text-xl md:text-xl lg:text-2xl text-gray-600 mb-16 mx-auto leading-relaxed"
+            className="text-xl md:text-xl lg:text-2xl text-secondary/70 mb-16 mx-auto leading-relaxed"
           >
             Connect talented professionals with innovative companies.
             Your next career move or perfect candidate is just one click away.
@@ -52,7 +52,7 @@ const Hero = () => {
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="group bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-4 rounded-xl flex items-center gap-2 hover:shadow-lg transition-shadow duration-300"
+              className="group bg-primary text-white px-6 py-4 rounded-xl flex items-center gap-2 hover:shadow-lg hover:bg-[#b24b1c] transition-shadow duration-300"
               onClick={() => navigate("/find-jobs")}
             >
               <Search className="w-5 h-5" />
@@ -63,7 +63,7 @@ const Hero = () => {
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="bg-white font-bold border border-gray-300 text-gray-800 px-6 py-4 rounded-xl flex items-center gap-2 hover:shadow-lg transition-shadow duration-300"
+              className="bg-tertiary font-bold border border-secondary/20 text-secondary px-6 py-4 rounded-xl flex items-center gap-2 transition-colors duration-300 hover:border-primary hover:text-primary hover:shadow-lg"
               onClick={() => {
                 navigate(
                   isAuthenticated && user?.role === "employer"
@@ -89,13 +89,13 @@ const Hero = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 + index * 0.1, duration: 0.6 }}
-                className="flex flex-col items-center justify-center text-center p-4 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors duration-300"
+                className="flex flex-col items-center justify-center text-center p-4 rounded-lg bg-secondary/[0.04] hover:bg-primary/10 transition-colors duration-300"
               >
-                <div className="text-3xl font-bold text-blue-500 mb-2">
+                <div className="text-3xl font-bold text-primary mb-2">
                   <stat.icon className="w-8 h-8" />
                 </div>
-                <div className="text-2xl font-bold text-gray-800 mb-1">{stat.value}</div>
-                <div className="text-gray-600">{stat.label}</div>
+                <div className="text-2xl font-bold text-secondary mb-1">{stat.value}</div>
+                <div className="text-secondary/70">{stat.label}</div>
               </motion.div>
             ))}
           </motion.div>
@@ -104,9 +104,9 @@ const Hero = () => {
 
       {/* Subtle Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-32 h-32 bg-blue-100 rounded-full blur-2xl opacity-30" />
-        <div className="absolute top-1/2 right-10 w-24 h-24 bg-purple-100 rounded-full blur-2xl opacity-30" />
-        <div className="absolute bottom-20 left-1/2 w-20 h-20 bg-green-100 rounded-full blur-2xl opacity-30" />
+        <div className="absolute top-20 left-10 w-32 h-32 bg-primary/15 rounded-full blur-2xl opacity-60" />
+        <div className="absolute top-1/2 right-10 w-24 h-24 bg-secondary/10 rounded-full blur-2xl opacity-50" />
+        <div className="absolute bottom-20 left-1/2 w-20 h-20 bg-primary/10 rounded-full blur-2xl opacity-60" />
       </div>
     </section>
   );

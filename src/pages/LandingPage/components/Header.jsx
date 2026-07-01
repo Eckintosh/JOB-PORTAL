@@ -16,10 +16,10 @@ const Header = () => {
         <div className='flex items-center justify-between h-16  '>
             {/* logo */}
             <div className='flex items-center space-x-3 cursor-pointer' onClick={()=>navigate("/")}>
-                <div className='w-8 h-8 bg-linear-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center'>
+                <div className='w-8 h-8 bg-linear-to-r from-primary to-secondary rounded-full flex items-center justify-center'>
                     <img src="/public/dddd.jpg" alt="logo" srcset="" className="w-full h-full object-cover rounded-full " />
                 </div>
-                <span className='text-xl font-bold text-gray-900'>TTH JobPortal</span>
+                <span className='text-xl font-bold text-primary'>TTH JobPortal</span>
             </div>
 
             {/* navigation links - hidden on mobile */}
@@ -51,13 +51,13 @@ const Header = () => {
                             ? "/employer-dashboard" : "/find-jobs"
 
                         }
-                        className='bg-linear-to-r from-blue-500 to-purple-500 text-white px-6 py-2 rounded-md hover:from-blue-600 hover:to-purple-600 transition-colors' > 
+                        className='bg-linear-to-r from-primary to-secondary text-white px-6 py-2 rounded-md hover:from-primary hover:to-secondary transition-colors' > 
                         Dashboard
                         </a>
                     </div>
                 ) : (
                     <>
-                    <a href="/login" className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-2 rounded-md hover:from-blue-600 hover:to-purple-600 transition-colors">Login</a>
+                    <a href="/login" className="bg-linear-to-r from-primary to-secondary text-white px-6 py-2 rounded-md hover:from-primary hover:to-secondary transition-colors">Login</a>
                     <a href="/signup" className="text-gray-600 hover:text-gray-900 transition-colors font-medium cursor-pointer">Sign Up</a>
                     </>
                 )}

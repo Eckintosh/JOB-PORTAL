@@ -69,7 +69,6 @@ const FeatureItem = ({ feature, accent }) => {
 const Features = () => {
   return (
     <section className="bg-slate-50 py-20 md:py-24 lg:py-28">
-      <div className="container mx-auto px-4">
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -117,7 +116,6 @@ const Features = () => {
             </motion.div>
           ))}
         </div>
-      </div>
     </section>
   );
 };

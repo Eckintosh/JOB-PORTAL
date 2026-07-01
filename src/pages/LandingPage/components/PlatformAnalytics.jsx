@@ -12,28 +12,28 @@ const analyticsStats = [
     value: "2.4M+",
     label: "Active Users",
     change: "+15%",
-    iconClass: "bg-blue-100 text-blue-700",
+    iconClass: "bg-primary/10 text-primary",
   },
   {
     icon: BriefcaseBusiness,
     value: "150K+",
     label: "Jobs Posted",
     change: "+22%",
-    iconClass: "bg-indigo-100 text-indigo-600",
+    iconClass: "bg-secondary/10 text-secondary",
   },
   {
     icon: CircleCheck,
     value: "89K+",
     label: "Successful Hires",
     change: "+18%",
-    iconClass: "bg-emerald-100 text-emerald-700",
+    iconClass: "bg-primary/10 text-primary",
   },
   {
     icon: ChartNoAxesCombined,
     value: "94%",
     label: "Match Rate",
     change: "+8%",
-    iconClass: "bg-red-100 text-red-600",
+    iconClass: "bg-secondary/10 text-secondary",
   },
 ];
 
@@ -44,7 +44,7 @@ const fadeUp = {
 
 const PlatformAnalytics = () => {
   return (
-    <section className="bg-[#eef3fb] py-20 md:py-24 lg:py-28">
+    <section className="bg-tertiary py-20 md:py-24 lg:py-28">
       <div className="container mx-auto px-4">
         <motion.div
           initial="hidden"
@@ -54,10 +54,10 @@ const PlatformAnalytics = () => {
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="mx-auto max-w-5xl text-center"
         >
-          <h2 className="text-4xl font-bold tracking-normal text-gray-950 md:text-5xl lg:text-6xl">
-            Platform <span className="text-blue-700">Analytics</span>
+          <h2 className="text-4xl font-bold tracking-normal text-secondary md:text-5xl lg:text-6xl">
+            Platform <span className="text-primary">Analytics</span>
           </h2>
-          <p className="mx-auto mt-6 max-w-4xl text-lg leading-8 text-gray-600 md:text-xl">
+          <p className="mx-auto mt-6 max-w-4xl text-lg leading-8 text-secondary/70 md:text-xl">
             Real-time insights and data-driven results that showcase the power of our
             platform in connecting talent with opportunities.
           </p>
@@ -85,7 +85,7 @@ const PlatformAnalytics = () => {
                 key={stat.label}
                 variants={fadeUp}
                 transition={{ duration: 0.5, ease: "easeOut" }}
-                className="flex min-h-60 flex-col justify-between rounded-lg bg-white p-8 shadow-sm ring-1 ring-gray-200/70"
+                className="flex min-h-60 flex-col justify-between rounded-lg bg-tertiary p-8 shadow-sm ring-1 ring-secondary/10"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div
@@ -93,16 +93,16 @@ const PlatformAnalytics = () => {
                   >
                     <Icon className="h-8 w-8" />
                   </div>
-                  <span className="rounded-full bg-emerald-100 px-4 py-1 text-base font-bold text-emerald-700">
+                  <span className="rounded-full bg-primary/10 px-4 py-1 text-base font-bold text-primary">
                     {stat.change}
                   </span>
                 </div>
 
                 <div>
-                  <p className="text-5xl font-medium tracking-normal text-gray-950">
+                  <p className="text-5xl font-medium tracking-normal text-secondary">
                     {stat.value}
                   </p>
-                  <p className="mt-2 text-lg font-medium text-gray-600">{stat.label}</p>
+                  <p className="mt-2 text-lg font-medium text-secondary/70">{stat.label}</p>
                 </div>
               </motion.article>
             );

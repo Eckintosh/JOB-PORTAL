@@ -13,22 +13,22 @@ const Footer = () => {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-white py-16 md:py-20">
+    <footer className="bg-tertiary py-16 md:py-20">
       <div className="container mx-auto px-4 text-center">
         <button
           type="button"
           onClick={() => navigate("/")}
           className="mx-auto inline-flex items-center gap-4 text-left"
         >
-          <span className="flex h-14 w-14 items-center justify-center rounded-lg bg-blue-600 text-white shadow-md">
+          <span className="flex h-14 w-14 items-center justify-center rounded-lg bg-primary text-tertiary shadow-md">
             <Briefcase className="h-8 w-8" />
           </span>
-          <span className="text-4xl font-bold tracking-normal text-gray-900 md:text-5xl">
+          <span className="text-4xl font-bold tracking-normal text-secondary md:text-5xl">
             JobPortal
           </span>
         </button>
 
-        <p className="mx-auto mt-8 max-w-2xl text-xl leading-8 text-gray-600">
+        <p className="mx-auto mt-8 max-w-2xl text-xl leading-8 text-secondary/70">
           Connecting talented professionals with innovative companies worldwide.
           Your career success is our mission.
         </p>
@@ -39,7 +39,7 @@ const Footer = () => {
               <a
                 key={link.label}
                 href={link.path}
-                className="text-lg font-semibold text-gray-600 transition-colors hover:text-blue-700"
+                className="text-lg font-semibold text-secondary/70 transition-colors hover:text-primary"
               >
                 {link.label}
               </a>
@@ -48,7 +48,7 @@ const Footer = () => {
                 key={link.label}
                 type="button"
                 onClick={() => navigate(link.path)}
-                className="text-lg font-semibold text-gray-600 transition-colors hover:text-blue-700"
+                className="text-lg font-semibold text-secondary/70 transition-colors hover:text-primary"
               >
                 {link.label}
               </button>
@@ -56,7 +56,7 @@ const Footer = () => {
           )}
         </nav>
 
-        <p className="mt-14 text-lg text-gray-500">
+        <p className="mt-14 text-lg text-secondary/60">
           Copyright {year} JobPortal. SPagad Technologies Limited.
         </p>
       </div>

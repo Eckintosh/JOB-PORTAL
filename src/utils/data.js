@@ -6,7 +6,7 @@ export const landingFeatures = {
   groups: [
     {
       title: "For Job Seekers",
-      accent: "blue",
+      accent: "primary",
       features: [
         {
           icon: "Search",
@@ -40,7 +40,7 @@ export const landingFeatures = {
     },
     {
       title: "For Employers",
-      accent: "purple",
+      accent: "secondary",
       features: [
         {
           icon: "Users",
