@@ -1,6 +1,4 @@
-import React from 'react'
 import {motion} from "framer-motion";
-import {Briefcase} from "lucide-react";
 import {useNavigate} from "react-router-dom";
 
 const Header = () => {
@@ -18,10 +16,10 @@ const Header = () => {
         <div className='flex items-center justify-between h-16  '>
             {/* logo */}
             <div className='flex items-center space-x-3 cursor-pointer' onClick={()=>navigate("/")}>
-                <div className='w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center'>
-                    <Briefcase className="w-5 h-5 text-white " />
+                <div className='w-8 h-8 bg-linear-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center'>
+                    <img src="/public/dddd.jpg" alt="logo" srcset="" className="w-full h-full object-cover rounded-full " />
                 </div>
-                <span className='text-xl font-bold text-gray-900'>JobPortal</span>
+                <span className='text-xl font-bold text-gray-900'>TTH JobPortal</span>
             </div>
 
             {/* navigation links - hidden on mobile */}
