@@ -4,7 +4,6 @@ import Features from './components/Features'
 import PlatformAnalytics from './components/PlatformAnalytics'
 import CareerBanner from './components/CareerBanner'
 import Footer from './components/Footer'
-
 const LandingPage = () => {
   return (
     <div className="min-h-screen bg-tertiary text-secondary">
@@ -19,3 +18,4 @@ const LandingPage = () => {
 }
 
 export default LandingPage
+

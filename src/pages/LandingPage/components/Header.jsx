@@ -17,7 +17,7 @@ const Header = () => {
             {/* logo */}
             <div className='flex items-center space-x-3 cursor-pointer' onClick={()=>navigate("/")}>
                 <div className='w-8 h-8 bg-linear-to-r from-primary to-secondary rounded-full flex items-center justify-center'>
-                    <img src="/public/dddd.jpg" alt="logo" srcset="" className="w-full h-full object-cover rounded-full " />
+                    <img src="/dddd.jpg" alt="logo" className="w-full h-full object-cover rounded-full " />
                 </div>
                 <span className='text-xl font-bold text-primary'>TTH JobPortal</span>
             </div>

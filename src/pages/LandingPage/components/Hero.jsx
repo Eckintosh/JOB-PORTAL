@@ -52,7 +52,7 @@ const Hero = () => {
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="group bg-primary text-white px-6 py-4 rounded-xl flex items-center gap-2 hover:shadow-lg hover:bg-[#b24b1c] transition-shadow duration-300"
+              className="group bg-primary text-white px-6 py-4 rounded-xl flex items-center gap-2 hover:shadow-lg bg-primary transition-shadow duration-300"
               onClick={() => navigate("/find-jobs")}
             >
               <Search className="w-5 h-5" />
@@ -83,21 +83,24 @@ const Hero = () => {
             transition={{ delay: 0.6, duration: 0.8 }}
             className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-2xl max-auto items-center justify-center mx-auto"
           >
-            {stats.map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8 + index * 0.1, duration: 0.6 }}
-                className="flex flex-col items-center justify-center text-center p-4 rounded-lg bg-secondary/[0.04] hover:bg-primary/10 transition-colors duration-300"
-              >
-                <div className="text-3xl font-bold text-primary mb-2">
-                  <stat.icon className="w-8 h-8" />
-                </div>
-                <div className="text-2xl font-bold text-secondary mb-1">{stat.value}</div>
-                <div className="text-secondary/70">{stat.label}</div>
-              </motion.div>
-            ))}
+            {stats.map((stat, index) => {
+              const IconComponent = stat.icon;
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8 + index * 0.1, duration: 0.6 }}
+                  className="flex flex-col items-center justify-center text-center p-4 rounded-lg bg-secondary/[0.04] hover:bg-primary/10 transition-colors duration-300"
+                >
+                  <div className="text-3xl font-bold text-primary mb-2">
+                    <IconComponent className="w-8 h-8" />
+                  </div>
+                  <div className="text-2xl font-bold text-secondary mb-1">{stat.value}</div>
+                  <div className="text-secondary/70">{stat.label}</div>
+                </motion.div>
+              );
+            })}
           </motion.div>
         </div>
       </div>

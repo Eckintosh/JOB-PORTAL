@@ -23,6 +23,16 @@ const iconMap = {
 };
 
 const accentClasses = {
+  primary: {
+    text: "text-blue-600",
+    line: "bg-blue-600",
+    icon: "bg-blue-50 text-blue-600",
+  },
+  secondary: {
+    text: "text-purple-600",
+    line: "bg-purple-500",
+    icon: "bg-purple-50 text-purple-600",
+  },
   blue: {
     text: "text-blue-600",
     line: "bg-blue-600",
@@ -34,6 +44,7 @@ const accentClasses = {
     icon: "bg-purple-50 text-purple-600",
   },
 };
+
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -68,7 +79,7 @@ const FeatureItem = ({ feature, accent }) => {
 
 const Features = () => {
   return (
-    <section className="bg-slate-50 py-20 md:py-24 lg:py-28">
+    <section className="bg-slate-50 py-20 md:py-24 lg:py-28 px-26">
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -116,6 +127,7 @@ const Features = () => {
             </motion.div>
           ))}
         </div>
+
     </section>
   );
 };
