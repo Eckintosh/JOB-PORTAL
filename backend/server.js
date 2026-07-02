@@ -8,6 +8,10 @@ const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const jobRoutes = require("./routes/jobRoutes");
+const applicationRoutes = require("./routes/applicationRoutes");
+const analyticsRoutes = require("./routes/analyticsRoutes");
+const savedJobRoutes = require("./routes/savedJobRoutes");
+
 
 const { Server } = require("lucide-react");
 
@@ -35,6 +39,7 @@ app.use('/api/user', userRoutes);
 app.use('/api/jobs', jobRoutes)
 app.use('/api/applications', applicationRoutes)
 app.use('/api/analytics', analyticsRoutes)
+app.use('/api/saved-jobs', savedJobRoutes)
 
 //Serve UPloads folder
 app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {}));
