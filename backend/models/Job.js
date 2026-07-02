@@ -14,9 +14,9 @@ const jobSchema = new mongoose.Schema({
     //employer
     company: {type: mongoose.Schema.Types.ObjectId, ref:"User", required: true}, 
 
-    salaryMin: {type: number},
-    salaryMax: {type: number},
-    isClosed: {type: boolean, default: false},
+    salaryMin: {type: Number},
+    salaryMax: {type: Number},
+    isClosed: {type: Boolean, default: false},
 
     jobType: {type: String, enum: ["full-time", "part-time", "contract", "temporary"]},
     companyLogo: String,
