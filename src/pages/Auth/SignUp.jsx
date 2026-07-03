@@ -18,16 +18,20 @@ import {
 } from "lucide-react"
 import { Link, useNavigate } from "react-router-dom"
 import { toast } from "react-hot-toast"
+import axiosInstance from "../../utils/axiosInstance"
+import { API_PATHS } from "../../utils/apiPath"
+import { useAuth } from "../../context/AuthContext"
 
 const SignUp = () => {
   const navigate = useNavigate()
+  const { login } = useAuth()
   const fileInputRef = useRef(null)
 
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     password: "",
-    role: "candidate", // 'candidate' or 'employer'
+    role: "jobseeker", // 'jobseeker' or 'employer'
     avatar: null
   })
 
@@ -88,8 +92,9 @@ const SignUp = () => {
     }
   }
 
-  // Handle Role Selection
+  // Handle Role Selection — maps UI label to backend enum value
   const handleRoleSelect = (role) => {
+    // role passed in is already "jobseeker" or "employer"
     setFormData(prev => ({
       ...prev,
       role
@@ -158,13 +163,19 @@ const SignUp = () => {
       loading: true,
     }))
 
-    // Simulate Auth Register API Request
-    setTimeout(() => {
-      localStorage.setItem("user", JSON.stringify({
-        fullName: formData.fullName,
+    // Call backend register API
+    try {
+      const response = await axiosInstance.post(API_PATHS.AUTH.REGISTER, {
+        name: formData.fullName,
+        email: formData.email,
+        password: formData.password,
         role: formData.role,
-        email: formData.email
-      }));
+      })
+
+      const { token, user } = response.data
+
+      // Persist token + user in context & localStorage
+      login(user, token)
 
       setFormState(prev => ({
         ...prev,
@@ -172,16 +183,27 @@ const SignUp = () => {
         success: true
       }))
       toast.success("Account created successfully!")
-      
-      // Navigate to candidate or employer dashboard depending on selected role
+
+      // Navigate based on role
       setTimeout(() => {
-        if (formData.role === "employer") {
-          navigate("/employer-dashboard")
+        if (user.role === "employer") {
+          navigate("/employer/dashboard")
         } else {
           navigate("/find-jobs")
         }
       }, 1200)
-    }, 2000)
+    } catch (error) {
+      const message =
+        error.response?.data?.message || "Registration failed. Please try again."
+
+      setFormState(prev => ({
+        ...prev,
+        loading: false,
+        success: false,
+        errors: { api: message },
+      }))
+      toast.error(message)
+    }
   }
 
   return (
@@ -518,15 +540,15 @@ const SignUp = () => {
                 {/* Job Seeker Option */}
                 <button
                   type="button"
-                  onClick={() => handleRoleSelect("candidate")}
+                  onClick={() => handleRoleSelect("jobseeker")}
                   className={`flex flex-col items-center justify-center p-3 rounded-xl border text-center transition-all cursor-pointer ${
-                    formData.role === "candidate"
+                    formData.role === "jobseeker"
                       ? "border-primary bg-primary/5 text-primary ring-1 ring-primary"
                       : "border-gray-200 hover:border-gray-300 bg-white text-gray-500"
                   }`}
                 >
                   <User className={`w-6 h-6 mb-1 transition-colors ${
-                    formData.role === "candidate" ? "text-primary" : "text-gray-400"
+                    formData.role === "jobseeker" ? "text-primary" : "text-gray-400"
                   }`} />
                   <span className="text-[13px] font-bold block">Job Seeker</span>
                   <span className="text-[10px] text-gray-400 mt-0.5">Looking for opportunities</span>

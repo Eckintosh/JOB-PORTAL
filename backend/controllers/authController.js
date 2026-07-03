@@ -11,20 +11,22 @@ exports.register = async (req, res) => {
     try{
         const {name, email, password, avatar, role} = req.body;
         const userExist = await User.findOne({email});
-        if(userExist) res.status(400).json({message: "User already exists"});
+        if(userExist) return res.status(400).json({message: "User already exists"});
         const user = await User.create({name, email, password, avatar, role});
 
         res.status(201).json({
-            _id: user._id,
-            name: user.name,
-            email: user.email,
-            avatar: user.avatar,
-            role: user.role,
             token: genarateToken(user._id),
-            companyName: user.companyName || '',
-            companyDescription: user.companyDescription || '',
-            companyLogo: user.conpanyLogo || '',
-            resume: user.resume || '',
+            user: {
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                avatar: user.avatar,
+                role: user.role,
+                companyName: user.companyName || '',
+                companyDescription: user.companyDescription || '',
+                companyLogo: user.companyLogo || '',
+                resume: user.resume || '',
+            }
         });
 
     } catch (error){
@@ -41,16 +43,18 @@ exports.login = async (req, res) => {
             return res.status(401).json({message: "Invalid credentials"});
         }
         res.json({
-            _id: user._id,
-            name: user.name,
-            email: user.email,
-            avatar: user.avatar,
-            role: user.role,
             token: genarateToken(user._id),
-            companyName: user.companyName || '',
-            companyDescription: user.companyDescription || '',
-            companyLogo: user.conpanyLogo || '',
-            resume: user.resume || '',
+            user: {
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                avatar: user.avatar,
+                role: user.role,
+                companyName: user.companyName || '',
+                companyDescription: user.companyDescription || '',
+                companyLogo: user.companyLogo || '',
+                resume: user.resume || '',
+            }
         });
     } catch (error){
         console.error(error);
