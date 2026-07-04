@@ -1,3 +1,5 @@
+import { LayoutDashboard, Plus, Briefcase, Building2 } from "lucide-react";
+
 export const landingFeatures = {
   title: "Everything You Need to",
   highlightedTitle: "Succeed",
@@ -75,3 +77,11 @@ export const landingFeatures = {
     },
   ],
 };
+
+// Navigation menu for employer
+export const NAVIGATION_MENU = [
+{ id: "employer-dashboard", name: "Dashboard", icon: LayoutDashboard },
+{ id: "post-job", name: "Post Job", icon: Plus },
+{ id: "manage-jobs", name: "Manage Jobs", icon: Briefcase },
+{ id: "company-profile", name: "Company Profile", icon: Building2 },
+]; 

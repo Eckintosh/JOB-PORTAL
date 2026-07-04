@@ -10,7 +10,7 @@ export const API_PATHS = {
   },
 
   DASHBOARD: {
-    OVERVIEW: "/api/analytics/overview",
+    OVERVIEW: "/api/analytics",
   },
 
   JOBS: {

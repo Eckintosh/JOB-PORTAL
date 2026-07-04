@@ -123,7 +123,7 @@ const Login = () => {
       // Navigate based on role
       setTimeout(() => {
         if (user.role === "employer") {
-          navigate("/employer/dashboard")
+          navigate("/employer-dashboard")
         } else {
           navigate("/find-jobs")
         }
