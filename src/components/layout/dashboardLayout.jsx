@@ -199,32 +199,14 @@ const DashboardLayout = ({ children, activeMenu }) => {
 
           {/* Profile */}
           <div className="relative" ref={dropdownRef}>
-            <button
-              onClick={() =>
-                setProfileDropdownOpen(!profileDropdownOpen)
-              }
-              className="flex items-center gap-2"
-            >
-              <div className="h-10 w-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold">
-                {user?.name?.charAt(0)?.toUpperCase() || "U"}
-              </div>
-            </button>
-
-            {profileDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-56 bg-white border rounded-lg shadow-lg z-50">
-                <ProfileDropdown  
-                isOpen = {profileDropdownOpen}
-                onToggle = {(e) => {
-                  e.stopPropagation();
-                  setProfileDropdownOpen(!profileDropdownOpen);
-                }}
-                avatar = {user?.avatar || ""}
-                companyName = {user?.name || "" }
-                email = {user?.email || ""}
-                onLogout = {logout}
-                />
-            </div>
-            )}
+            <ProfileDropdown  
+              isOpen={profileDropdownOpen}
+              onToggle={() => setProfileDropdownOpen(!profileDropdownOpen)}
+              avatar={user?.avatar || ""}
+              companyName={user?.name || ""}
+              email={user?.email || ""}
+              onLogout={logout}
+            />
           </div>
         </header>
 

@@ -21,6 +21,7 @@ import { toast } from "react-hot-toast"
 import axiosInstance from "../../utils/axiosInstance"
 import { API_PATHS } from "../../utils/apiPath"
 import { useAuth } from "../../context/AuthContext"
+import uploadImage from "../../utils/uploadingImage"
 
 const SignUp = () => {
   const navigate = useNavigate()
@@ -165,11 +166,18 @@ const SignUp = () => {
 
     // Call backend register API
     try {
+      let avatarUrl = "";
+      if (formData.avatar) {
+        const uploadRes = await uploadImage(formData.avatar);
+        avatarUrl = uploadRes.imageUrl;
+      }
+
       const response = await axiosInstance.post(API_PATHS.AUTH.REGISTER, {
         name: formData.fullName,
         email: formData.email,
         password: formData.password,
         role: formData.role,
+        avatar: avatarUrl
       })
 
       const { token, user } = response.data
