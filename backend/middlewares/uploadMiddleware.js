@@ -1,6 +1,5 @@
 const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
 // Configure Cloudinary
 cloudinary.config({
@@ -9,21 +8,8 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Cloudinary storage — images go to "job-portal/avatars", PDFs to "job-portal/resumes"
-const storage = new CloudinaryStorage({
-    cloudinary,
-    params: (req, file) => {
-        const isImage = file.mimetype.startsWith("image/");
-        return {
-            folder: isImage ? "job-portal/avatars" : "job-portal/resumes",
-            resource_type: isImage ? "image" : "raw",
-            format: isImage ? "webp" : undefined, // auto-convert images to webp
-            transformation: isImage
-                ? [{ width: 400, height: 400, crop: "fill", gravity: "face" }]
-                : undefined,
-        };
-    },
-});
+// Use memoryStorage instead of multer-storage-cloudinary (incompatible with multer v2)
+const storage = multer.memoryStorage();
 
 // File filter — allow images and PDFs only
 const fileFilter = (req, file, cb) => {
@@ -37,4 +23,21 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ storage, fileFilter });
 
+/**
+ * Upload a buffer to Cloudinary.
+ * @param {Buffer} buffer – the file buffer from multer memoryStorage
+ * @param {object} options – Cloudinary upload options (folder, resource_type, etc.)
+ * @returns {Promise<object>} Cloudinary upload result
+ */
+const uploadToCloudinary = (buffer, options = {}) => {
+    return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(options, (error, result) => {
+            if (error) return reject(error);
+            resolve(result);
+        });
+        stream.end(buffer);
+    });
+};
+
 module.exports = upload;
+module.exports.uploadToCloudinary = uploadToCloudinary;

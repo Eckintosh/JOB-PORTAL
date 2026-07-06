@@ -1,5 +1,6 @@
 const Application = require("../models/Application");
 const Job = require("../models/Job");
+const { uploadToCloudinary } = require("../middlewares/uploadMiddleware");
 
 // @desc    Apply for a job
 // @route   POST /api/applications/:jobId
@@ -30,8 +31,15 @@ const applyForJob = async (req, res) => {
             return res.status(400).json({ message: "You have already applied for this job" });
         }
 
-        // Resume: use uploaded file path or a URL passed in body
-        const resume = req.file ? req.file.path : req.body.resume;
+        // Resume: upload file buffer to Cloudinary, or use a URL passed in body
+        let resume = req.body.resume;
+        if (req.file) {
+            const result = await uploadToCloudinary(req.file.buffer, {
+                folder: "job-portal/resumes",
+                resource_type: "raw",
+            });
+            resume = result.secure_url;
+        }
 
         if (!resume) {
             return res.status(400).json({ message: "A resume (file or URL) is required" });
