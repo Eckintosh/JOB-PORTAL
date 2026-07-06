@@ -13,8 +13,6 @@ const analyticsRoutes = require("./routes/analyticsRoutes");
 const savedJobRoutes = require("./routes/savedJobRoutes");
 
 
-const { Server } = require("lucide-react");
-
 const app = express();
 
 //Middleware to handle cors 
