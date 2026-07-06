@@ -1,13 +1,27 @@
 const multer = require("multer");
-const path = require("path");
+const cloudinary = require("cloudinary").v2;
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
-// Configure storage
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, "uploads/");
-    },
-    filename: (req, file, cb) => {
-        cb(null, `${Date.now()}-${file.originalname}`);
+// Configure Cloudinary
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// Cloudinary storage — images go to "job-portal/avatars", PDFs to "job-portal/resumes"
+const storage = new CloudinaryStorage({
+    cloudinary,
+    params: (req, file) => {
+        const isImage = file.mimetype.startsWith("image/");
+        return {
+            folder: isImage ? "job-portal/avatars" : "job-portal/resumes",
+            resource_type: isImage ? "image" : "raw",
+            format: isImage ? "webp" : undefined, // auto-convert images to webp
+            transformation: isImage
+                ? [{ width: 400, height: 400, crop: "fill", gravity: "face" }]
+                : undefined,
+        };
     },
 });
 
