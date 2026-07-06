@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Briefcase,
   Building2,
@@ -9,6 +9,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { NAVIGATION_MENU } from "../../utils/data";
+import ProfileDropdown from "./ProfileDropdown";
 
 const NavigationItem = ({ item, isActive, onClick, isCollapsed }) => {
   const Icon = item.icon;
@@ -63,19 +64,18 @@ const DashboardLayout = ({ children, activeMenu }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Close profile dropdown
+  // Close profile dropdown when clicking outside
+  const dropdownRef = useRef(null);
   useEffect(() => {
-    const handleClickOutside = () => {
-      if (profileDropdownOpen) {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setProfileDropdownOpen(false);
       }
     };
 
-    document.addEventListener("click", handleClickOutside);
-
-    return () =>
-      document.removeEventListener("click", handleClickOutside);
-  }, [profileDropdownOpen]);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleNavigation = (itemId) => {
     setActiveNavItem(itemId);
@@ -198,7 +198,7 @@ const DashboardLayout = ({ children, activeMenu }) => {
           </div>
 
           {/* Profile */}
-          <div className="relative">
+          <div className="relative" ref={dropdownRef}>
             <button
               onClick={() =>
                 setProfileDropdownOpen(!profileDropdownOpen)
@@ -219,7 +219,7 @@ const DashboardLayout = ({ children, activeMenu }) => {
                   setProfileDropdownOpen(!profileDropdownOpen);
                 }}
                 avatar = {user?.avatar || ""}
-                companyName = {user?.name || ""}
+                companyName = {user?.name || "" }
                 email = {user?.email || ""}
                 onLogout = {logout}
                 />
