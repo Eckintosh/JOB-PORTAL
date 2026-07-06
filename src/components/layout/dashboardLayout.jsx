@@ -212,22 +212,18 @@ const DashboardLayout = ({ children, activeMenu }) => {
 
             {profileDropdownOpen && (
               <div className="absolute right-0 mt-2 w-56 bg-white border rounded-lg shadow-lg z-50">
-                <div className="px-4 py-3 border-b">
-                  <p className="font-semibold">
-                    {user?.name || "User"}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    {user?.email}
-                  </p>
-                </div>
-
-                <button
-                  onClick={handleLogout}
-                  className="w-full text-left px-4 py-3 hover:bg-gray-50 text-red-600"
-                >
-                  Logout
-                </button>
-              </div>
+                <ProfileDropdown  
+                isOpen = {profileDropdownOpen}
+                onToggle = {(e) => {
+                  e.stopPropagation();
+                  setProfileDropdownOpen(!profileDropdownOpen);
+                }}
+                avatar = {user?.avatar || ""}
+                companyName = {user?.name || ""}
+                email = {user?.email || ""}
+                onLogout = {logout}
+                />
+            </div>
             )}
           </div>
         </header>
