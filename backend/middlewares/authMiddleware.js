@@ -2,11 +2,11 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
 // Middleware to protect route 
-const protect = async (req, resizeBy, next) => {
+const protect = async (req, res, next) => {
     try{
         let token = req.headers.authorization
 
-        if(token && token.startWith("Bearer")){
+        if(token && token.startsWith("Bearer")){
             token = token.split(" ")[1];//Exttract the token
 
             const decoded = jwt.verify(token, process.env.JWT_SECRET);

@@ -273,6 +273,7 @@ const JobPostingForm = () => {
                   name="salaryMin"
                   type="number"
                   icon={GhsIcon}
+                  iconPadding="pl-14"
                   placeholder="Min"
                   value={form.salaryMin}
                   onChange={handleChange}
@@ -282,6 +283,7 @@ const JobPostingForm = () => {
                   name="salaryMax"
                   type="number"
                   icon={GhsIcon}
+                  iconPadding="pl-14"
                   placeholder="Max"
                   value={form.salaryMax}
                   onChange={handleChange}

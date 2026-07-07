@@ -1,4 +1,4 @@
-﻿
+
 import { ChevronDown } from "lucide-react";
 
 // ─── shared label + error wrapper ────────────────────────────────────────────
@@ -38,6 +38,7 @@ export const InputField = ({
   name,
   disabled,
   className = "",
+  iconPadding = "pl-12",
   ...rest
 }) => (
   <FieldWrapper label={label} required={required} hint={hint} error={error}>
@@ -54,7 +55,7 @@ export const InputField = ({
         onChange={onChange}
         placeholder={placeholder}
         disabled={disabled}
-        className={`${base} py-3 ${Icon ? "pl-10 pr-4" : "px-4"} ${
+        className={`${base} py-3 ${Icon ? `${iconPadding} pr-4` : "px-4"} ${
           error ? "border-red-400 focus:border-red-400 focus:ring-red-400/20" : ""
         } ${disabled ? "cursor-not-allowed bg-gray-50 text-gray-400" : ""} ${className}`}
         {...rest}
