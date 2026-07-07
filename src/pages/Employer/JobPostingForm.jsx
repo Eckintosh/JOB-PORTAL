@@ -199,7 +199,7 @@ const JobPostingForm = () => {
               label="Location"
               name="location"
               icon={MapPin}
-              placeholder="e.g., New York, NY"
+              placeholder="e.g., Accra, Ghana"
               value={form.location}
               onChange={handleChange}
               error={errors.location}
