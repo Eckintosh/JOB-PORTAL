@@ -101,9 +101,22 @@ const getMyJobs = async (req, res) => {
             return res.status(403).json({ message: "Only employers can access this route" });
         }
 
-        const jobs = await Job.find({ company: req.user._id }).sort({ createdAt: -1 });
+        const jobs = await Job.find({ company: req.user._id })
+            .populate("company", "name")
+            .sort({ createdAt: -1 });
 
-        res.status(200).json(jobs);
+        const jobsWithCount = await Promise.all(
+            jobs.map(async (job) => {
+                const Application = require("../models/Application"); // local import to avoid circular dependency issues if any
+                const applicantCount = await Application.countDocuments({ job: job._id });
+                return {
+                    ...job.toObject(),
+                    applicantCount,
+                };
+            })
+        );
+
+        res.status(200).json(jobsWithCount);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Server error", error: error.message });
@@ -153,10 +166,13 @@ const closeJob = async (req, res) => {
             return res.status(403).json({ message: "Not authorized to close this job" });
         }
 
-        job.isClosed = true;
+        job.isClosed = !job.isClosed;
         await job.save();
 
-        res.status(200).json({ message: "Job closed successfully", job });
+        res.status(200).json({
+            message: job.isClosed ? "Job closed successfully" : "Job reopened successfully",
+            job
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Server error", error: error.message });
