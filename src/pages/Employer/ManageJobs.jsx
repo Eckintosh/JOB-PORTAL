@@ -3,6 +3,7 @@ import {
   Briefcase, Plus, Search, Edit3, XCircle, Trash2,
   AlertCircle, Users, CheckCircle, ChevronDown, Loader2,
   MapPin, DollarSign, Send, Eye, X, ArrowUpDown,
+  ChevronLeft, ChevronRight,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -97,6 +98,23 @@ const ManageJobs = () => {
     if (sortBy === "alphabetical") return a.title.localeCompare(b.title);
     return 0;
   });
+
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+
+  // Reset page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, statusFilter, sortBy]);
+
+  // Pagination calculations
+  const totalItems = sortedJobs.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
+  const paginatedJobs = sortedJobs.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   // Toggle Close / Reopen
   const handleToggleClose = async (jobId, currentClosedState) => {
@@ -318,7 +336,7 @@ const ManageJobs = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-50">
-                  {sortedJobs.map((job) => {
+                  {paginatedJobs.map((job) => {
                     const isActive = !job.isClosed;
                     return (
                       <tr key={job._id} className="hover:bg-slate-50/50 transition-colors">
@@ -401,7 +419,7 @@ const ManageJobs = () => {
 
             {/* Mobile Stack Cards Layout */}
             <div className="md:hidden divide-y divide-gray-100">
-              {sortedJobs.map((job) => {
+              {paginatedJobs.map((job) => {
                 const isActive = !job.isClosed;
                 return (
                   <div key={job._id} className="p-5 space-y-4 hover:bg-slate-50/50">
@@ -467,6 +485,72 @@ const ManageJobs = () => {
                 );
               })}
             </div>
+
+            {/* ── Pagination Footer Controls ──────────────────────────────── */}
+            {totalPages > 1 && (
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-gray-100 bg-white px-6 py-4 rounded-b-2xl">
+                <div className="text-xs text-gray-500 font-medium">
+                  Showing <span className="font-semibold text-gray-900">{Math.min((currentPage - 1) * itemsPerPage + 1, totalItems)}</span> to{" "}
+                  <span className="font-semibold text-gray-900">{Math.min(currentPage * itemsPerPage, totalItems)}</span> of{" "}
+                  <span className="font-semibold text-gray-900">{totalItems}</span> jobs
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  {/* Items per page selector */}
+                  <div className="flex items-center gap-1.5 mr-2">
+                    <span className="text-xs text-gray-400 font-medium">Per page:</span>
+                    <select
+                      value={itemsPerPage}
+                      onChange={(e) => {
+                        setItemsPerPage(Number(e.target.value));
+                        setCurrentPage(1);
+                      }}
+                      className="rounded-lg border border-gray-200 bg-white px-2 py-1 text-xs text-gray-600 outline-none cursor-pointer focus:border-blue-500"
+                    >
+                      <option value={5}>5</option>
+                      <option value={10}>10</option>
+                      <option value={20}>20</option>
+                      <option value={50}>50</option>
+                    </select>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                    className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </button>
+
+                  <div className="flex items-center gap-1">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                      <button
+                        type="button"
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`flex h-8 w-8 items-center justify-center rounded-lg text-xs font-semibold transition ${
+                          currentPage === page
+                            ? "bg-primary text-white shadow-sm shadow-primary/10"
+                            : "border border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    ))}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                    disabled={currentPage === totalPages}
+                    className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
