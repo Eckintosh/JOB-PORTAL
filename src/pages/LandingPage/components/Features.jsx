@@ -69,7 +69,7 @@ const FeatureItem = ({ feature, accent }) => {
 
       <div className="min-w-0">
         <h3 className="text-xl font-bold text-gray-950">{feature.title}</h3>
-        <p className="mt-3 max-w-xl text-lg leading-8 text-gray-600">
+        <p className="mt-2 max-w-xl text-lg leading-7 text-gray-600">
           {feature.description}
         </p>
       </div>
@@ -119,7 +119,7 @@ const Features = () => {
                 className={`mt-4 h-1 w-56 rounded-full ${accentClasses[group.accent].line}`}
               />
 
-              <div className="mt-12 grid gap-14 md:gap-16 lg:gap-20">
+              <div className="mt-10 grid gap-8 md:gap-10 lg:gap-12">
                 {group.features.map((feature) => (
                   <FeatureItem key={feature.title} feature={feature} accent={group.accent} />
                 ))}

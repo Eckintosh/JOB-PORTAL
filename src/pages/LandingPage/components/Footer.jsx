@@ -57,7 +57,7 @@ const Footer = () => {
         </nav>
 
         <p className="mt-14 text-lg text-secondary/60">
-          Copyright {year} JobPortal. SPagad Technologies Limited.
+          Copyright {year} JobPortal. Spagad Technologies Limited.
         </p>
       </div>
     </footer>

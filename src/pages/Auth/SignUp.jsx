@@ -226,11 +226,11 @@ const SignUp = () => {
 
         {/* Logo Header */}
         <div className="relative z-10 flex items-center space-x-3 cursor-pointer" onClick={() => navigate("/")}>
-          <div className="w-10 h-10 bg-linear-to-r from-primary to-secondary rounded-full flex items-center justify-center border border-primary/40 shadow-lg shadow-primary/20">
-            <img src="/dddd.jpg" alt="logo" className="w-full h-full object-cover rounded-full" />
+          <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border border-primary/40 shadow-lg shadow-primary/20">
+            <img src="/spg-logo.png" alt="logo" className="w-full h-full object-cover rounded-full" />
           </div>
           <span className="text-2xl font-bold text-white tracking-wide">
-            TTH <span className="text-primary">JobPortal</span>
+            SPG <span className="text-primary">JobPortal</span>
           </span>
         </div>
 
@@ -286,7 +286,7 @@ const SignUp = () => {
 
         {/* Footer info */}
         <div className="relative z-10 text-sm text-gray-500 flex justify-between items-center">
-          <span>&copy; {new Date().getFullYear()} TTH JobPortal.</span>
+          <span>&copy; {new Date().getFullYear()} SPG JobPortal.</span>
           <div className="flex space-x-4">
             <a href="#" className="hover:text-white transition-colors">Privacy</a>
             <a href="#" className="hover:text-white transition-colors">Terms</a>
@@ -625,7 +625,7 @@ const SignUp = () => {
 
           {/* Footer Text */}
           <div className="text-center text-[11px] text-gray-400 font-semibold pt-1">
-            JobPortal. SPagad Technologies Limited
+            JobPortal. Spagad Technologies Limited
           </div>
         </motion.div>
       </div>
