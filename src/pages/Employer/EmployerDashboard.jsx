@@ -164,7 +164,7 @@ export const EmployerDashboard = () => {
                 </p>
               </div>
               <button
-                onClick={() => navigate("/employer/post-job")}
+                onClick={() => navigate("/post-job")}
                 className="hidden sm:flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-slate-900 shadow-lg transition-all hover:shadow-xl hover:scale-105 active:scale-100"
               >
                 <Plus className="h-4 w-4" />

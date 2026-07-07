@@ -1,38 +1,38 @@
-﻿import { Clock, Briefcase, CheckCircle2, XCircle, Loader2 } from "lucide-react";
+import { Clock, Briefcase, CheckCircle2, XCircle, Loader2 } from "lucide-react";
 import moment from "moment";
 
-// ── Status config ─────────────────────────────────────────────────────────────
+// ── Status config — keys match Application model enum exactly ─────────────────
 const STATUS_CONFIG = {
-  pending: {
-    label: "Pending",
+  "Applied": {
+    label: "Applied",
     icon: Loader2,
     classes: "bg-amber-50 text-amber-600 ring-1 ring-amber-200",
-    spin: true,
+    spin: false,
   },
-  reviewing: {
-    label: "Reviewing",
+  "Under Review": {
+    label: "Under Review",
     icon: Loader2,
     classes: "bg-blue-50 text-blue-600 ring-1 ring-blue-200",
     spin: true,
   },
-  shortlisted: {
-    label: "Shortlisted",
-    icon: CheckCircle2,
-    classes: "bg-violet-50 text-violet-600 ring-1 ring-violet-200",
-    spin: false,
-  },
-  accepted: {
-    label: "Accepted",
+  "Offered": {
+    label: "Offered",
     icon: CheckCircle2,
     classes: "bg-emerald-50 text-emerald-600 ring-1 ring-emerald-200",
     spin: false,
   },
-  rejected: {
+  "Rejected": {
     label: "Rejected",
     icon: XCircle,
     classes: "bg-red-50 text-red-500 ring-1 ring-red-200",
     spin: false,
   },
+  // fallback for static demo data
+  "pending":     { label: "Pending",     icon: Loader2,      classes: "bg-amber-50 text-amber-600 ring-1 ring-amber-200",   spin: false },
+  "reviewing":   { label: "Reviewing",   icon: Loader2,      classes: "bg-blue-50 text-blue-600 ring-1 ring-blue-200",     spin: true  },
+  "shortlisted": { label: "Shortlisted", icon: CheckCircle2, classes: "bg-violet-50 text-violet-600 ring-1 ring-violet-200", spin: false },
+  "accepted":    { label: "Accepted",    icon: CheckCircle2, classes: "bg-emerald-50 text-emerald-600 ring-1 ring-emerald-200", spin: false },
+  "rejected":    { label: "Rejected",    icon: XCircle,      classes: "bg-red-50 text-red-500 ring-1 ring-red-200",        spin: false },
 };
 
 // ── Colour palette for avatar background (index-based) ───────────────────────

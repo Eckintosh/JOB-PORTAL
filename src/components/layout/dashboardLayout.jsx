@@ -150,12 +150,12 @@ const DashboardLayout = ({ children, activeMenu }) => {
         </nav>
 
         {/* Logout */}
-        <div className="absolute bottom-4 left-4 right-4">
+        <div className="absolute bottom-4 left-4 right-4 bg-red-400 rounded-lg text-white">
           <button
             onClick={handleLogout}
-            className="w-full flex items-center px-3 py-2.5 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200"
+            className="w-full flex items-center px-3 py-2.5 text-sm font-medium rounded-lg text-white hover:bg-gray-50 hover:text-gray-900 transition-all duration-200"
           >
-            <LogOut className="h-5 w-5 flex-shrink-0 text-gray-500" />
+            <LogOut className="h-5 w-5 flex-shrink-0 text-white " />
 
             {!sidebarCollapsed && (
               <span className="ml-3">Logout</span>
