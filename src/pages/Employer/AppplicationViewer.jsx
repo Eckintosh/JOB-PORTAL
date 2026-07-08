@@ -1,9 +1,634 @@
-import React from 'react'
+import { useEffect, useState, useCallback } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import {
+  Users, Briefcase, Search, FileText, Mail, Phone,
+  MapPin, Calendar, Clock, ChevronRight, ArrowLeft,
+  CheckCircle2, XCircle, Loader2, Eye, Download,
+  RefreshCw, SlidersHorizontal, X, Star, TrendingUp,
+  ExternalLink, ChevronDown, AlertCircle, Inbox,
+} from "lucide-react";
+import moment from "moment";
+import toast from "react-hot-toast";
+import DashboardLayout from "../../components/layout/dashboardLayout";
+import axiosInstance from "../../utils/axiosInstance";
+import { API_PATHS } from "../../utils/apiPath";
 
-export const AppplicationViewer = () => {
+// ─── Status Config ───────────────────────────────────────────────────────────
+const STATUS_CONFIG = {
+  Applied: {
+    label: "Applied",
+    icon: Clock,
+    bg: "bg-slate-100",
+    text: "text-slate-600",
+    ring: "ring-slate-200",
+    dot: "bg-slate-400",
+    badge: "bg-slate-50 text-slate-600 ring-1 ring-slate-200",
+  },
+  "Under Review": {
+    label: "Under Review",
+    icon: Loader2,
+    bg: "bg-blue-50",
+    text: "text-blue-600",
+    ring: "ring-blue-200",
+    dot: "bg-blue-500",
+    badge: "bg-blue-50 text-blue-600 ring-1 ring-blue-200",
+    spin: true,
+  },
+  Offered: {
+    label: "Offered",
+    icon: CheckCircle2,
+    bg: "bg-emerald-50",
+    text: "text-emerald-600",
+    ring: "ring-emerald-200",
+    dot: "bg-emerald-500",
+    badge: "bg-emerald-50 text-emerald-600 ring-1 ring-emerald-200",
+  },
+  Rejected: {
+    label: "Rejected",
+    icon: XCircle,
+    bg: "bg-red-50",
+    text: "text-red-500",
+    ring: "ring-red-200",
+    dot: "bg-red-400",
+    badge: "bg-red-50 text-red-500 ring-1 ring-red-200",
+  },
+};
+
+const STATUS_OPTIONS = ["Applied", "Under Review", "Offered", "Rejected"];
+
+// ─── Avatar Gradients ────────────────────────────────────────────────────────
+const AVATAR_GRADIENTS = [
+  "from-indigo-400 to-violet-500",
+  "from-blue-400 to-cyan-500",
+  "from-emerald-400 to-teal-500",
+  "from-orange-400 to-amber-500",
+  "from-pink-400 to-rose-500",
+  "from-purple-400 to-indigo-500",
+];
+
+const getInitials = (name = "") =>
+  name.split(" ").slice(0, 2).map((w) => w[0]?.toUpperCase()).join("") || "?";
+
+// ─── Status Badge ─────────────────────────────────────────────────────────────
+const StatusBadge = ({ status, size = "sm" }) => {
+  const cfg = STATUS_CONFIG[status] ?? STATUS_CONFIG["Applied"];
+  const Icon = cfg.icon;
   return (
-    <div>AppplicationViewer</div>
-  )
-}
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-full font-semibold ${cfg.badge} ${
+        size === "sm" ? "px-2.5 py-0.5 text-xs" : "px-3 py-1 text-sm"
+      }`}
+    >
+      <Icon className={`${size === "sm" ? "h-3 w-3" : "h-3.5 w-3.5"} ${cfg.spin ? "animate-spin" : ""}`} />
+      {cfg.label}
+    </span>
+  );
+};
 
-export default AppplicationViewer
+// ─── Inline Loader ────────────────────────────────────────────────────────────
+const InlineLoader = ({ message = "Loading…" }) => (
+  <div className="flex flex-col items-center justify-center py-24 gap-4">
+    <div className="relative h-14 w-14">
+      <div className="animate-spin rounded-full h-14 w-14 border-4 border-indigo-100 border-t-indigo-600" />
+      <div className="absolute inset-0 flex items-center justify-center">
+        <Users className="h-6 w-6 text-indigo-600" />
+      </div>
+    </div>
+    <p className="text-sm font-medium text-gray-400">{message}</p>
+  </div>
+);
+
+// ─── Empty State ──────────────────────────────────────────────────────────────
+const EmptyState = ({ title, description, icon: Icon = Inbox }) => (
+  <div className="flex flex-col items-center justify-center py-24 text-center px-4">
+    <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-50">
+      <Icon className="h-8 w-8 text-indigo-400" />
+    </div>
+    <h3 className="text-lg font-bold text-gray-900">{title}</h3>
+    <p className="mt-1.5 text-sm text-gray-400 max-w-xs">{description}</p>
+  </div>
+);
+
+// ─── Applicant List Item ──────────────────────────────────────────────────────
+const ApplicantListItem = ({ app, index, isSelected, onClick }) => {
+  const name = app.applicant?.name || "Unknown Applicant";
+  const initials = getInitials(name);
+  const gradient = AVATAR_GRADIENTS[index % AVATAR_GRADIENTS.length];
+  const cfg = STATUS_CONFIG[app.status] ?? STATUS_CONFIG["Applied"];
+
+  return (
+    <button
+      onClick={onClick}
+      className={`w-full text-left p-4 flex items-center gap-3.5 transition-all duration-200 border-b border-gray-50 last:border-none hover:bg-indigo-50/50 group ${
+        isSelected ? "bg-indigo-50 border-l-2 border-l-indigo-500" : "border-l-2 border-l-transparent"
+      }`}
+    >
+      {/* Avatar */}
+      <div
+        className={`h-10 w-10 shrink-0 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center text-sm font-bold text-white shadow-sm`}
+      >
+        {initials}
+      </div>
+
+      {/* Info */}
+      <div className="min-w-0 flex-1">
+        <p className={`truncate text-sm font-semibold ${isSelected ? "text-indigo-700" : "text-gray-900"} group-hover:text-indigo-700 transition-colors`}>
+          {name}
+        </p>
+        <div className="mt-0.5 flex items-center gap-1.5 text-xs text-gray-400">
+          <Calendar className="h-3 w-3 shrink-0" />
+          <span>{moment(app.createdAt).fromNow()}</span>
+        </div>
+      </div>
+
+      {/* Status dot + chevron */}
+      <div className="flex flex-col items-end gap-1.5 shrink-0">
+        <span className={`h-2 w-2 rounded-full ${cfg.dot}`} />
+        <ChevronRight className={`h-3.5 w-3.5 text-gray-300 transition-transform group-hover:translate-x-0.5 ${isSelected ? "text-indigo-400" : ""}`} />
+      </div>
+    </button>
+  );
+};
+
+// ─── Info Row ─────────────────────────────────────────────────────────────────
+const InfoRow = ({ icon: Icon, label, value }) => (
+  <div className="flex items-start gap-3 py-2.5 border-b border-gray-50 last:border-none">
+    <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-indigo-50">
+      <Icon className="h-3.5 w-3.5 text-indigo-500" />
+    </div>
+    <div>
+      <p className="text-xs font-medium text-gray-400">{label}</p>
+      <p className="mt-0.5 text-sm font-semibold text-gray-800 break-all">{value || "—"}</p>
+    </div>
+  </div>
+);
+
+// ─── Main Component ───────────────────────────────────────────────────────────
+const ApplicationViewer = () => {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const jobId = searchParams.get("jobId");
+
+  const [applications, setApplications] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedApp, setSelectedApp] = useState(null);
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [showFilters, setShowFilters] = useState(false);
+  const [resumePreviewOpen, setResumePreviewOpen] = useState(false);
+
+  // ── Fetch Applications ─────────────────────────────────────────────────────
+  const fetchApplications = useCallback(async () => {
+    if (!jobId) return;
+    setIsLoading(true);
+    try {
+      const res = await axiosInstance.get(API_PATHS.APPLICATIONS.GET_APPLICANT(jobId));
+      const data = Array.isArray(res.data) ? res.data : [];
+      setApplications(data);
+      if (data.length > 0 && !selectedApp) {
+        setSelectedApp(data[0]);
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to load applications.");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [jobId]);
+
+  useEffect(() => {
+    fetchApplications();
+  }, [fetchApplications]);
+
+  // ── Filter Logic ───────────────────────────────────────────────────────────
+  const filtered = applications.filter((app) => {
+    const name = app.applicant?.name?.toLowerCase() || "";
+    const email = app.applicant?.email?.toLowerCase() || "";
+    const q = searchQuery.toLowerCase();
+    const matchesSearch = !q || name.includes(q) || email.includes(q);
+    const matchesStatus = statusFilter === "All" || app.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
+
+  // ── Summary counts ─────────────────────────────────────────────────────────
+  const counts = STATUS_OPTIONS.reduce((acc, s) => {
+    acc[s] = applications.filter((a) => a.status === s).length;
+    return acc;
+  }, {});
+
+  // ── Update Status ──────────────────────────────────────────────────────────
+  const handleUpdateStatus = async (newStatus) => {
+    if (!selectedApp || newStatus === selectedApp.status) return;
+    setIsUpdatingStatus(true);
+    const id = toast.loading("Updating status…");
+    try {
+      await axiosInstance.patch(API_PATHS.APPLICATIONS.UPDATE_STATUS(selectedApp._id), {
+        status: newStatus,
+      });
+      toast.dismiss(id);
+      toast.success(`Status updated to "${newStatus}"`);
+      const updated = applications.map((a) =>
+        a._id === selectedApp._id ? { ...a, status: newStatus } : a
+      );
+      setApplications(updated);
+      setSelectedApp((prev) => ({ ...prev, status: newStatus }));
+    } catch (err) {
+      toast.dismiss(id);
+      toast.error(err.response?.data?.message || "Failed to update status.");
+    } finally {
+      setIsUpdatingStatus(false);
+    }
+  };
+
+  // ── Job Info (from first application) ─────────────────────────────────────
+  const jobInfo = applications[0]?.job;
+  const selectedIndex = filtered.findIndex((a) => a._id === selectedApp?._id);
+  const selectedGradient = AVATAR_GRADIENTS[selectedIndex % AVATAR_GRADIENTS.length];
+  const selectedInitials = getInitials(selectedApp?.applicant?.name);
+
+  if (!jobId) {
+    return (
+      <DashboardLayout activeMenu="manage-jobs">
+        <EmptyState
+          icon={AlertCircle}
+          title="No Job Selected"
+          description="Please navigate here from the Manage Jobs page by clicking on an applicant count."
+        />
+      </DashboardLayout>
+    );
+  }
+
+  return (
+    <DashboardLayout activeMenu="manage-jobs">
+      <div className="h-[calc(100vh-8rem)] flex flex-col gap-0 max-w-7xl mx-auto">
+
+        {/* ── Top Bar ──────────────────────────────────────────────────────── */}
+        <div className="mb-5 flex flex-col sm:flex-row sm:items-center gap-4">
+          <button
+            onClick={() => navigate("/manage-jobs")}
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-gray-500 hover:text-indigo-600 transition-colors group shrink-0"
+          >
+            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
+            Back to Jobs
+          </button>
+
+          <div className="flex-1 min-w-0">
+            <h1 className="text-xl font-bold text-gray-900 truncate">
+              {jobInfo ? (
+                <>
+                  Applicants for{" "}
+                  <span className="text-indigo-600">{jobInfo.title}</span>
+                </>
+              ) : (
+                "Application Viewer"
+              )}
+            </h1>
+            {jobInfo && (
+              <div className="flex items-center gap-3 mt-0.5 text-xs text-gray-400">
+                <span className="flex items-center gap-1"><MapPin className="h-3 w-3" />{jobInfo.location}</span>
+                <span className="h-1 w-1 rounded-full bg-gray-300" />
+                <span className="flex items-center gap-1"><Briefcase className="h-3 w-3" />{jobInfo.type}</span>
+              </div>
+            )}
+          </div>
+
+          {/* Stat Pills */}
+          <div className="flex items-center gap-2 shrink-0">
+            <div className="flex items-center gap-1.5 rounded-xl bg-white border border-gray-100 px-3.5 py-2 shadow-sm">
+              <Users className="h-4 w-4 text-indigo-500" />
+              <span className="text-sm font-bold text-gray-900">{applications.length}</span>
+              <span className="text-xs text-gray-400">Total</span>
+            </div>
+            <div className="flex items-center gap-1.5 rounded-xl bg-white border border-gray-100 px-3.5 py-2 shadow-sm">
+              <TrendingUp className="h-4 w-4 text-emerald-500" />
+              <span className="text-sm font-bold text-gray-900">{counts["Offered"] || 0}</span>
+              <span className="text-xs text-gray-400">Offered</span>
+            </div>
+            <button
+              onClick={fetchApplications}
+              title="Refresh"
+              className="flex items-center justify-center h-9 w-9 rounded-xl bg-white border border-gray-100 shadow-sm hover:bg-indigo-50 hover:border-indigo-200 hover:text-indigo-600 text-gray-400 transition-all"
+            >
+              <RefreshCw className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+
+        {/* ── Status Filter Pills ───────────────────────────────────────────── */}
+        <div className="mb-4 flex items-center gap-2 flex-wrap">
+          {["All", ...STATUS_OPTIONS].map((s) => {
+            const count = s === "All" ? applications.length : (counts[s] || 0);
+            const isActive = statusFilter === s;
+            const cfg = s !== "All" ? STATUS_CONFIG[s] : null;
+            return (
+              <button
+                key={s}
+                onClick={() => setStatusFilter(s)}
+                className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-bold transition-all duration-200 ${
+                  isActive
+                    ? "bg-indigo-600 text-white shadow-md shadow-indigo-200"
+                    : "bg-white text-gray-500 border border-gray-200 hover:border-indigo-300 hover:text-indigo-600"
+                }`}
+              >
+                {cfg && (
+                  <span className={`h-1.5 w-1.5 rounded-full ${isActive ? "bg-white" : cfg.dot}`} />
+                )}
+                {s}
+                <span
+                  className={`rounded-full px-1.5 py-0.5 text-[10px] leading-none font-bold ${
+                    isActive ? "bg-white/20 text-white" : "bg-gray-100 text-gray-500"
+                  }`}
+                >
+                  {count}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* ── Main Split Layout ─────────────────────────────────────────────── */}
+        {isLoading ? (
+          <div className="flex-1 rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden">
+            <InlineLoader message="Loading applications…" />
+          </div>
+        ) : applications.length === 0 ? (
+          <div className="flex-1 rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden">
+            <EmptyState
+              icon={Inbox}
+              title="No Applications Yet"
+              description="No candidates have applied for this position yet. Share the job to attract talent."
+            />
+          </div>
+        ) : (
+          <div className="flex-1 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm flex min-h-0">
+
+            {/* ── Left Panel: Applicant List ─────────────────────────────── */}
+            <div className="w-[300px] xl:w-[340px] shrink-0 border-r border-gray-100 flex flex-col overflow-hidden">
+              {/* Search bar */}
+              <div className="p-3 border-b border-gray-100">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+                  <input
+                    type="text"
+                    placeholder="Search applicants…"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-9 pr-8 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/20 transition-all"
+                  />
+                  {searchQuery && (
+                    <button
+                      onClick={() => setSearchQuery("")}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Count label */}
+              <div className="px-4 py-2 border-b border-gray-50">
+                <p className="text-xs font-semibold text-gray-400">
+                  {filtered.length} applicant{filtered.length !== 1 ? "s" : ""}
+                  {statusFilter !== "All" && ` · ${statusFilter}`}
+                </p>
+              </div>
+
+              {/* List */}
+              <div className="flex-1 overflow-y-auto">
+                {filtered.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center h-full py-12 text-center px-4">
+                    <Search className="h-8 w-8 text-gray-300 mb-2" />
+                    <p className="text-sm font-medium text-gray-500">No matches found</p>
+                    <p className="text-xs text-gray-400 mt-1">Try a different search or filter.</p>
+                  </div>
+                ) : (
+                  filtered.map((app, i) => (
+                    <ApplicantListItem
+                      key={app._id}
+                      app={app}
+                      index={i}
+                      isSelected={selectedApp?._id === app._id}
+                      onClick={() => setSelectedApp(app)}
+                    />
+                  ))
+                )}
+              </div>
+            </div>
+
+            {/* ── Right Panel: Detail View ───────────────────────────────── */}
+            {selectedApp ? (
+              <div className="flex-1 overflow-y-auto min-w-0">
+                {/* Detail Header */}
+                <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-sm border-b border-gray-100 px-7 py-5">
+                  <div className="flex items-center gap-4">
+                    {/* Avatar */}
+                    <div
+                      className={`h-14 w-14 shrink-0 rounded-2xl bg-gradient-to-br ${selectedGradient} flex items-center justify-center text-lg font-bold text-white shadow-md`}
+                    >
+                      {selectedInitials}
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                      <h2 className="text-xl font-bold text-gray-900 truncate">
+                        {selectedApp.applicant?.name || "Unknown Applicant"}
+                      </h2>
+                      <div className="flex items-center gap-2 mt-1 flex-wrap">
+                        <span className="flex items-center gap-1 text-xs text-gray-400">
+                          <Mail className="h-3 w-3" />
+                          {selectedApp.applicant?.email || "—"}
+                        </span>
+                        <span className="h-1 w-1 rounded-full bg-gray-300 shrink-0" />
+                        <span className="flex items-center gap-1 text-xs text-gray-400">
+                          <Calendar className="h-3 w-3" />
+                          Applied {moment(selectedApp.createdAt).fromNow()}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Current Status */}
+                    <div className="shrink-0">
+                      <StatusBadge status={selectedApp.status} size="md" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Detail Body */}
+                <div className="px-7 py-6 space-y-6">
+
+                  {/* ── Change Status ──────────────────────────────────────── */}
+                  <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+                    <div className="flex items-center gap-2 mb-4">
+                      <SlidersHorizontal className="h-4 w-4 text-gray-400" />
+                      <h3 className="text-sm font-bold text-gray-900">Update Application Status</h3>
+                    </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                      {STATUS_OPTIONS.map((s) => {
+                        const cfg = STATUS_CONFIG[s];
+                        const Icon = cfg.icon;
+                        const isActive = selectedApp.status === s;
+                        return (
+                          <button
+                            key={s}
+                            disabled={isUpdatingStatus}
+                            onClick={() => handleUpdateStatus(s)}
+                            className={`flex flex-col items-center gap-1.5 rounded-xl p-3 border-2 text-xs font-bold transition-all duration-200 ${
+                              isActive
+                                ? `${cfg.bg} ${cfg.text} ${cfg.ring} border-current shadow-sm`
+                                : "bg-gray-50 text-gray-400 border-gray-100 hover:border-gray-300 hover:text-gray-600 hover:bg-white"
+                            } ${isUpdatingStatus ? "opacity-60 cursor-not-allowed" : ""}`}
+                          >
+                            <Icon className={`h-4.5 w-4.5 ${isActive && cfg.spin ? "animate-spin" : ""}`} />
+                            {s}
+                            {isActive && (
+                              <span className="text-[10px] font-normal opacity-70">Current</span>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* ── Two-col Grid ───────────────────────────────────────── */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+                    {/* Applicant Info */}
+                    <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+                      <div className="flex items-center gap-2 mb-3">
+                        <Users className="h-4 w-4 text-gray-400" />
+                        <h3 className="text-sm font-bold text-gray-900">Applicant Details</h3>
+                      </div>
+                      <div>
+                        <InfoRow icon={Mail} label="Email Address" value={selectedApp.applicant?.email} />
+                        <InfoRow icon={Calendar} label="Applied On" value={moment(selectedApp.createdAt).format("MMM D, YYYY · h:mm A")} />
+                        <InfoRow icon={Clock} label="Last Updated" value={moment(selectedApp.updatedAt).fromNow()} />
+                        <InfoRow icon={Briefcase} label="Applied For" value={selectedApp.job?.title} />
+                        {selectedApp.job?.location && (
+                          <InfoRow icon={MapPin} label="Job Location" value={selectedApp.job.location} />
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Resume Card */}
+                    <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm flex flex-col">
+                      <div className="flex items-center gap-2 mb-3">
+                        <FileText className="h-4 w-4 text-gray-400" />
+                        <h3 className="text-sm font-bold text-gray-900">Resume / CV</h3>
+                      </div>
+
+                      {selectedApp.resume ? (
+                        <>
+                          {/* Preview card */}
+                          <div className="flex-1 flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-indigo-100 bg-indigo-50/50 p-6 text-center gap-3">
+                            <div className="h-12 w-12 rounded-xl bg-indigo-100 flex items-center justify-center">
+                              <FileText className="h-6 w-6 text-indigo-500" />
+                            </div>
+                            <div>
+                              <p className="text-sm font-semibold text-gray-800">Resume Attached</p>
+                              <p className="text-xs text-gray-400 mt-0.5 break-all max-w-[200px] mx-auto truncate">
+                                {selectedApp.resume.split("/").pop()}
+                              </p>
+                            </div>
+                            <div className="flex gap-2 flex-wrap justify-center">
+                              <a
+                                href={selectedApp.resume}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm shadow-indigo-200 hover:bg-indigo-700 transition-colors"
+                              >
+                                <Eye className="h-3.5 w-3.5" />
+                                View
+                              </a>
+                              <a
+                                href={selectedApp.resume}
+                                download
+                                className="inline-flex items-center gap-1.5 rounded-lg border border-indigo-200 bg-white px-3.5 py-2 text-xs font-semibold text-indigo-600 hover:bg-indigo-50 transition-colors"
+                              >
+                                <Download className="h-3.5 w-3.5" />
+                                Download
+                              </a>
+                            </div>
+                          </div>
+                        </>
+                      ) : (
+                        <div className="flex-1 flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-100 bg-gray-50 p-6 text-center">
+                          <FileText className="h-8 w-8 text-gray-300 mb-2" />
+                          <p className="text-sm font-medium text-gray-400">No resume uploaded</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* ── Cover Letter ───────────────────────────────────────── */}
+                  {selectedApp.coverLetter && (
+                    <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+                      <div className="flex items-center gap-2 mb-3">
+                        <Star className="h-4 w-4 text-amber-400" />
+                        <h3 className="text-sm font-bold text-gray-900">Cover Letter</h3>
+                      </div>
+                      <div className="rounded-xl bg-slate-50 p-4 border border-slate-100">
+                        <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">
+                          {selectedApp.coverLetter}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* ── Timeline ───────────────────────────────────────────── */}
+                  <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+                    <div className="flex items-center gap-2 mb-4">
+                      <Clock className="h-4 w-4 text-gray-400" />
+                      <h3 className="text-sm font-bold text-gray-900">Application Timeline</h3>
+                    </div>
+                    <div className="relative pl-5">
+                      {/* Vertical line */}
+                      <div className="absolute left-[7px] top-2 bottom-2 w-px bg-indigo-100" />
+
+                      {/* Timeline events */}
+                      <div className="space-y-4">
+                        <div className="flex items-start gap-3">
+                          <span className="relative z-10 h-3.5 w-3.5 shrink-0 rounded-full bg-indigo-500 ring-2 ring-white shadow-sm mt-0.5" />
+                          <div>
+                            <p className="text-xs font-bold text-gray-800">Application Submitted</p>
+                            <p className="text-xs text-gray-400">{moment(selectedApp.createdAt).format("MMM D, YYYY · h:mm A")}</p>
+                          </div>
+                        </div>
+
+                        {selectedApp.status !== "Applied" && (
+                          <div className="flex items-start gap-3">
+                            <span className={`relative z-10 h-3.5 w-3.5 shrink-0 rounded-full ring-2 ring-white shadow-sm mt-0.5 ${STATUS_CONFIG[selectedApp.status]?.dot || "bg-gray-400"}`} />
+                            <div>
+                              <p className="text-xs font-bold text-gray-800">
+                                Status Changed to{" "}
+                                <span className={STATUS_CONFIG[selectedApp.status]?.text}>
+                                  {selectedApp.status}
+                                </span>
+                              </p>
+                              <p className="text-xs text-gray-400">{moment(selectedApp.updatedAt).format("MMM D, YYYY · h:mm A")}</p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            ) : (
+              <div className="flex-1 flex items-center justify-center">
+                <EmptyState
+                  icon={Users}
+                  title="Select an Applicant"
+                  description="Click on any applicant from the list to view their full application details."
+                />
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </DashboardLayout>
+  );
+};
+
+export default ApplicationViewer;
