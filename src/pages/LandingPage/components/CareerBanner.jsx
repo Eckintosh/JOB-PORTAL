@@ -1,38 +1,57 @@
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, BriefcaseBusiness, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const CareerBanner = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="bg-secondary py-20 text-tertiary md:py-24 lg:py-28">
-      <div className="container mx-auto px-4 text-center">
+    <section className="relative isolate overflow-hidden bg-secondary py-20 text-white md:py-24">
+      <img
+        src="/video.png"
+        alt="Professional interview meeting"
+        className="absolute inset-0 h-full w-full object-cover opacity-35"
+      />
+      <div className="absolute inset-0 bg-secondary/85" />
+
+      <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 22 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.35 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="mx-auto max-w-5xl"
+          transition={{ duration: 0.55, ease: "easeOut" }}
+          className="max-w-3xl"
         >
-          <h2 className="text-4xl font-bold tracking-normal md:text-5xl lg:text-6xl">
-            Ready to transform your career?
+          <p className="text-sm font-bold uppercase tracking-[0.16em] text-orange-200">
+            Move forward
+          </p>
+          <h2 className="mt-4 text-3xl font-bold tracking-normal text-white sm:text-4xl lg:text-5xl">
+            Start with the path that matches your next goal.
           </h2>
-          <p className="mx-auto mt-8 max-w-3xl text-xl leading-9 text-tertiary/85 md:text-2xl">
-            Join thousands of others who found their professional homes through our
-            platform.
+          <p className="mt-5 text-base leading-7 text-white/80 sm:text-lg">
+            Explore open opportunities as a candidate or sign in as an employer to
+            manage job posts and applications from the dashboard.
           </p>
 
-          <motion.button
-            type="button"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => navigate("/signup")}
-            className="mx-auto mt-12 inline-flex min-h-16 items-center justify-center gap-3 rounded-lg bg-tertiary px-10 text-xl font-bold text-primary shadow-sm transition-colors hover:bg-primary hover:text-tertiary"
-          >
-            <span>Get Started Now</span>
-            <ArrowRight className="h-6 w-6" />
-          </motion.button>
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+            <button
+              type="button"
+              onClick={() => navigate("/find-jobs")}
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-md bg-white px-6 text-sm font-bold text-secondary shadow-sm transition-colors hover:bg-orange-50"
+            >
+              <Search className="h-5 w-5" />
+              Browse Jobs
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate("/login")}
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-md border border-white/35 px-6 text-sm font-bold text-white transition-colors hover:bg-white hover:text-secondary"
+            >
+              Employer Login
+              <BriefcaseBusiness className="h-5 w-5" />
+              <ArrowRight className="h-5 w-5" />
+            </button>
+          </div>
         </motion.div>
       </div>
     </section>

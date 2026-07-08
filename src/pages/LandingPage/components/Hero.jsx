@@ -1,164 +1,146 @@
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Search, ArrowRight, Users, Building2, TrendingUp } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import { motion } from "framer-motion";
+import {
+  ArrowRight,
+  BriefcaseBusiness,
+  Building2,
+  CheckCircle2,
+  Search,
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
+const getStoredUser = () => {
+  try {
+    const storedUser = localStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser) : null;
+  } catch {
+    localStorage.removeItem("user");
+    return null;
+  }
+};
+
+const proofPoints = [
+  { icon: CheckCircle2, text: "Verified employer profiles" },
+  { icon: BriefcaseBusiness, text: "Focused job discovery" },
+  { icon: Building2, text: "Tools for active hiring teams" },
+];
 
 const Hero = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user] = useState(() => getStoredUser());
+  const isAuthenticated = Boolean(user);
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-      setIsAuthenticated(true);
-    } else {
-      setUser(null);
-      setIsAuthenticated(false);
-    }
-  }, []);
-
-  const stats = [
-    { icon: Users, label: 'Active Users', value: '2.4M+' },
-    { icon: Building2, label: 'Companies', value: '50K+' },
-    { icon: TrendingUp, label: 'Jobs Posted', value: '150K+' }
-  ];
+  const employerPath =
+    isAuthenticated && user?.role === "employer" ? "/employer-dashboard" : "/login";
 
   return (
-    <section 
-      className="relative pt-24 pb-16 min-h-screen flex items-center bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: "url('/bg.jpg')" }}
-    >
-      {/* Background Overlay */}
-      <div className="absolute inset-0 bg-white/90 z-0" />
+    <section className="relative isolate flex min-h-[82svh] items-center overflow-hidden bg-secondary pt-24 pb-14 text-white sm:min-h-[84svh] md:pt-28 lg:pb-16">
+      <img
+        src="/bg.jpg"
+        alt="Hiring interview in progress"
+        className="absolute inset-0 h-full w-full object-cover"
+      />
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(10,13,18,0.92),rgba(10,13,18,0.74)_48%,rgba(10,13,18,0.32))]" />
 
-      {/* Subtle Background Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute top-20 left-10 w-32 h-32 bg-primary/15 rounded-full blur-2xl opacity-60" />
-        <div className="absolute top-1/2 right-10 w-24 h-24 bg-secondary/10 rounded-full blur-2xl opacity-50" />
-        <div className="absolute bottom-20 left-1/2 w-20 h-20 bg-primary/10 rounded-full blur-2xl opacity-60" />
-      </div>
-
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-4xl mx-auto text-center">
-          {/* Main Heading */}
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight pt-10"
-          >
-            Find Your Dream Job or
-            <span className="block bg-gradient-to-r from-primary to-[#973203] text-transparent bg-clip-text">
-              Perfect Hire
-            </span>
-          </motion.h1>
-
-          {/* Subheading */}
+      <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl">
           <motion.p
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.8 }}
-            className="text-xl md:text-xl lg:text-2xl text-secondary/70 mb-16 mx-auto leading-relaxed"
+            transition={{ duration: 0.55, ease: "easeOut" }}
+            className="text-sm font-bold uppercase tracking-[0.18em] text-orange-200"
           >
-            Connect talented professionals with innovative companies.
-            Your next career move or perfect candidate is just one click away.
+            Professional recruitment platform
           </motion.p>
 
-          {/* CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
+          <motion.h1
+            initial={{ opacity: 0, y: 22 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.8 }}
-            className={`flex flex-col sm:flex-row justify-center items-center gap-4 ${isAuthenticated ? 'mb-12' : 'mb-4'}`}
+            transition={{ delay: 0.08, duration: 0.6, ease: "easeOut" }}
+            className="mt-5 max-w-2xl text-5xl font-bold leading-[1.02] tracking-normal text-white sm:text-6xl lg:text-7xl"
           >
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="group bg-primary text-white px-6 py-4 rounded-xl flex items-center gap-2 hover:shadow-lg bg-primary transition-shadow duration-300"
-              onClick={() => navigate("/find-jobs")}
-            >
-              <Search className="w-5 h-5" />
-              <span>Find Jobs</span>
-              <ArrowRight className="w-5 h-5 font-bold group-hover:translate-x-1 transition-transform duration-300" />
-            </motion.button>
+            SPG JobPortal
+          </motion.h1>
 
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="bg-tertiary font-bold border border-secondary/20 text-secondary px-6 py-4 rounded-xl flex items-center gap-2 transition-colors duration-300 hover:border-primary hover:text-primary hover:shadow-lg"
-              onClick={() => {
-                navigate(
-                  isAuthenticated && user?.role === "employer"
-                    ? "/employer-dashboard"
-                    : "/login"
-                );
-              }}
+          <motion.p
+            initial={{ opacity: 0, y: 22 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.16, duration: 0.6, ease: "easeOut" }}
+            className="mt-6 max-w-2xl text-lg leading-8 text-white/80 sm:text-xl"
+          >
+            A focused workspace for finding the right roles, presenting stronger
+            candidate profiles, and managing employer hiring activity with clarity.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 22 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.24, duration: 0.6, ease: "easeOut" }}
+            className="mt-9 flex flex-col gap-3 sm:flex-row"
+          >
+            <button
+              type="button"
+              onClick={() => navigate("/find-jobs")}
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-md bg-primary px-6 text-sm font-bold text-white shadow-sm transition-colors hover:bg-orange-700"
+            >
+              <Search className="h-5 w-5" />
+              Find Jobs
+              <ArrowRight className="h-5 w-5" />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => navigate(employerPath)}
+              className="inline-flex min-h-12 items-center justify-center rounded-md border border-white/35 bg-white/10 px-6 text-sm font-bold text-white backdrop-blur transition-colors hover:bg-white hover:text-secondary"
             >
               Post a Job
-            </motion.button>
+            </button>
           </motion.div>
 
-          {/* Subtle login/signup options if not logged in */}
-          {!isAuthenticated && (
+          {!isAuthenticated ? (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.8 }}
-              className="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-4 text-sm font-semibold text-secondary/60 mb-12"
+              transition={{ delay: 0.34, duration: 0.55 }}
+              className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm font-medium text-white/72"
             >
-              <div className="flex items-center gap-1.5">
-                <span>Already have an account?</span>
-                <button
-                  onClick={() => navigate("/login")}
-                  className="text-primary hover:text-orange-600 hover:underline cursor-pointer font-bold"
-                >
-                  Log In
-                </button>
-              </div>
-              <span className="hidden sm:inline text-secondary/30">•</span>
-              <div className="flex items-center gap-1.5">
-                <span>New to the platform?</span>
-                <button
-                  onClick={() => navigate("/signup")}
-                  className="text-primary hover:text-orange-600 hover:underline cursor-pointer font-bold"
-                >
-                  Register
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => navigate("/login")}
+                className="font-bold text-white transition-colors hover:text-orange-200"
+              >
+                Login
+              </button>
+              <span className="h-1 w-1 rounded-full bg-white/45" />
+              <button
+                type="button"
+                onClick={() => navigate("/signup")}
+                className="font-bold text-white transition-colors hover:text-orange-200"
+              >
+                Create an account
+              </button>
             </motion.div>
-          )}
+          ) : null}
 
-          {/* Stats */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.8 }}
-            className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-2xl max-auto items-center justify-center mx-auto"
+            transition={{ delay: 0.42, duration: 0.55, ease: "easeOut" }}
+            className="mt-10 grid max-w-3xl gap-3 border-t border-white/20 pt-6 sm:grid-cols-3"
           >
-            {stats.map((stat, index) => {
-              const IconComponent = stat.icon;
+            {proofPoints.map((item) => {
+              const Icon = item.icon;
+
               return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.8 + index * 0.1, duration: 0.6 }}
-                  className="flex flex-col items-center justify-center text-center p-4 rounded-lg bg-secondary/[0.04] hover:bg-primary/10 transition-colors duration-300"
-                >
-                  <div className="text-3xl font-bold text-primary mb-2">
-                    <IconComponent className="w-8 h-8" />
-                  </div>
-                  <div className="text-2xl font-bold text-secondary mb-1">{stat.value}</div>
-                  <div className="text-secondary/70">{stat.label}</div>
-                </motion.div>
+                <div key={item.text} className="flex items-center gap-3 text-sm text-white/80">
+                  <Icon className="h-5 w-5 shrink-0 text-orange-200" />
+                  <span>{item.text}</span>
+                </div>
               );
             })}
           </motion.div>
         </div>
       </div>
-
     </section>
   );
 };

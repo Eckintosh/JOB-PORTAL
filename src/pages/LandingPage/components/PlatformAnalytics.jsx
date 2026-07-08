@@ -3,111 +3,99 @@ import {
   BriefcaseBusiness,
   ChartNoAxesCombined,
   CircleCheck,
-  Users,
+  Clock,
 } from "lucide-react";
 
-const analyticsStats = [
-  {
-    icon: Users,
-    value: "2.4M+",
-    label: "Active Users",
-    change: "+15%",
-    iconClass: "bg-primary/10 text-primary",
-  },
+const workflowItems = [
   {
     icon: BriefcaseBusiness,
-    value: "150K+",
-    label: "Jobs Posted",
-    change: "+22%",
-    iconClass: "bg-secondary/10 text-secondary",
+    title: "Publish and manage roles",
+    description:
+      "Employers can create job posts, keep listings organized, and return to active hiring work quickly.",
   },
   {
     icon: CircleCheck,
-    value: "89K+",
-    label: "Successful Hires",
-    change: "+18%",
-    iconClass: "bg-primary/10 text-primary",
+    title: "Review applications clearly",
+    description:
+      "Applicant information is grouped around each opening so hiring teams can compare next steps.",
   },
   {
     icon: ChartNoAxesCombined,
-    value: "94%",
-    label: "Match Rate",
-    change: "+8%",
-    iconClass: "bg-secondary/10 text-secondary",
+    title: "Track hiring activity",
+    description:
+      "Dashboard views make job performance, recent activity, and applicant flow easier to monitor.",
+  },
+  {
+    icon: Clock,
+    title: "Reduce manual follow-up",
+    description:
+      "Saved jobs, profiles, and application views keep both sides aligned during the hiring process.",
   },
 ];
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
+  hidden: { opacity: 0, y: 22 },
   visible: { opacity: 1, y: 0 },
 };
 
 const PlatformAnalytics = () => {
   return (
-    <section className="bg-tertiary py-20 md:py-24 lg:py-28">
-      <div className="container mx-auto px-4">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.35 }}
-          variants={fadeUp}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="mx-auto max-w-5xl text-center"
-        >
-          <h2 className="text-4xl font-bold tracking-normal text-secondary md:text-5xl lg:text-6xl">
-            Platform <span className="text-primary">Analytics</span>
-          </h2>
-          <p className="mx-auto mt-6 max-w-4xl text-lg leading-8 text-secondary/70 md:text-xl">
-            Real-time insights and data-driven results that showcase the power of our
-            platform in connecting talent with opportunities.
-          </p>
-        </motion.div>
+    <section className="bg-white py-20 md:py-24">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.35 }}
+            variants={fadeUp}
+            transition={{ duration: 0.55, ease: "easeOut" }}
+          >
+            <p className="text-sm font-bold uppercase tracking-[0.16em] text-primary">
+              Operational clarity
+            </p>
+            <h2 className="mt-4 text-3xl font-bold tracking-normal text-secondary sm:text-4xl lg:text-5xl">
+              Built around the hiring work that happens every day.
+            </h2>
+            <p className="mt-5 text-base leading-7 text-slate-600 sm:text-lg">
+              The landing experience now mirrors the product promise: practical tools,
+              clear routes, and a confident tone for both employers and job seekers.
+            </p>
+          </motion.div>
 
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-          variants={{
-            hidden: {},
-            visible: {
-              transition: {
-                staggerChildren: 0.12,
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            variants={{
+              hidden: {},
+              visible: {
+                transition: {
+                  staggerChildren: 0.08,
+                },
               },
-            },
-          }}
-          className="mt-14 grid gap-6 sm:grid-cols-2 xl:grid-cols-4"
-        >
-          {analyticsStats.map((stat) => {
-            const Icon = stat.icon;
+            }}
+            className="grid gap-4 sm:grid-cols-2"
+          >
+            {workflowItems.map((item) => {
+              const Icon = item.icon;
 
-            return (
-              <motion.article
-                key={stat.label}
-                variants={fadeUp}
-                transition={{ duration: 0.5, ease: "easeOut" }}
-                className="flex min-h-60 flex-col justify-between rounded-lg bg-tertiary p-8 shadow-sm ring-1 ring-secondary/10"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div
-                    className={`flex h-16 w-16 items-center justify-center rounded-lg ${stat.iconClass}`}
-                  >
-                    <Icon className="h-8 w-8" />
+              return (
+                <motion.article
+                  key={item.title}
+                  variants={fadeUp}
+                  transition={{ duration: 0.45, ease: "easeOut" }}
+                  className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm"
+                >
+                  <div className="flex h-11 w-11 items-center justify-center rounded-md bg-slate-100 text-secondary ring-1 ring-slate-200">
+                    <Icon className="h-5 w-5" />
                   </div>
-                  <span className="rounded-full bg-primary/10 px-4 py-1 text-base font-bold text-primary">
-                    {stat.change}
-                  </span>
-                </div>
-
-                <div>
-                  <p className="text-5xl font-medium tracking-normal text-secondary">
-                    {stat.value}
-                  </p>
-                  <p className="mt-2 text-lg font-medium text-secondary/70">{stat.label}</p>
-                </div>
-              </motion.article>
-            );
-          })}
-        </motion.div>
+                  <h3 className="mt-5 text-lg font-bold text-secondary">{item.title}</h3>
+                  <p className="mt-3 text-sm leading-6 text-slate-600">{item.description}</p>
+                </motion.article>
+              );
+            })}
+          </motion.div>
+        </div>
       </div>
     </section>
   );

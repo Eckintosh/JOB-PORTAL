@@ -1,76 +1,78 @@
 import { LayoutDashboard, Plus, Briefcase, Building2 } from "lucide-react";
 
 export const landingFeatures = {
-  title: "Everything You Need to",
-  highlightedTitle: "Succeed",
+  title: "Designed for",
+  highlightedTitle: "serious hiring",
   subtitle:
-    "Whether you're looking for your next opportunity or the perfect candidate, we have the tools and features to make it happen.",
+    "Simple, reliable tools for candidates exploring opportunities and employers managing job posts, profiles, and applications.",
   groups: [
     {
-      title: "For Job Seekers",
+      title: "For Candidates",
+      kicker: "Find your next role",
       accent: "primary",
       features: [
         {
           icon: "Search",
-          title: "Smart Job Matching",
+          title: "Focused Job Search",
           description:
-            "AI-powered algorithm matches you with relevant opportunities based on your skills and preferences.",
+            "Browse current openings and view role details without unnecessary distractions.",
           variant: "card",
         },
         {
           icon: "FileText",
-          title: "Resume Builder",
+          title: "Candidate Profile",
           description:
-            "Create professional resumes with our intuitive builder and templates designed by experts.",
+            "Keep your personal and professional details ready for applications.",
           variant: "card",
         },
         {
-          icon: "MessageSquare",
-          title: "Direct Communication",
+          icon: "Star",
+          title: "Saved Jobs",
           description:
-            "Connect directly with hiring managers and recruiters through our secure messaging platform.",
+            "Shortlist promising roles and return to them when you are ready to apply.",
           variant: "plain",
         },
         {
           icon: "ClipboardCheck",
-          title: "Skill Assessment",
+          title: "Application Flow",
           description:
-            "Showcase your abilities with verified skill tests and earn badges that employers trust.",
+            "Move from job discovery to application details through a direct, guided path.",
           variant: "plain",
         },
       ],
     },
     {
       title: "For Employers",
+      kicker: "Manage active hiring",
       accent: "secondary",
       features: [
         {
-          icon: "Users",
-          title: "Talent Pool Access",
+          icon: "BriefcaseBusiness",
+          title: "Job Posting",
           description:
-            "Access our vast database of pre-screened candidates and find the perfect fit for your team.",
+            "Create openings with the role, location, compensation, and requirements candidates need.",
           variant: "card",
           highlighted: true,
         },
         {
           icon: "BarChart3",
-          title: "Analytics Dashboard",
+          title: "Hiring Dashboard",
           description:
-            "Track your hiring performance with detailed analytics and insights on candidate engagement.",
+            "Track posted roles, recent activity, and hiring progress from one employer workspace.",
           variant: "card",
         },
         {
-          icon: "ShieldCheck",
-          title: "Verified Candidates",
+          icon: "Users",
+          title: "Applicant Review",
           description:
-            "All candidates undergo background verification to ensure you're hiring trustworthy professionals.",
+            "Open applicant records and review candidate information tied to each job.",
           variant: "plain",
         },
         {
-          icon: "Clock",
-          title: "Quick Hiring",
+          icon: "Building2",
+          title: "Company Profile",
           description:
-            "Streamlined hiring process reduces time-to-hire by 60% with automated screening tools.",
+            "Maintain company details so candidates understand the organization behind each role.",
           variant: "plain",
         },
       ],
