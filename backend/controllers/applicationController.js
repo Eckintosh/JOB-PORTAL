@@ -1,6 +1,6 @@
 const Application = require("../models/Application");
 const Job = require("../models/Job");
-const { uploadToCloudinary } = require("../middlewares/uploadMiddleware");
+const { uploadToCloudinary, uploadToLocalDisk } = require("../middlewares/uploadMiddleware");
 
 // @desc    Apply for a job
 // @route   POST /api/applications/:jobId
@@ -34,11 +34,17 @@ const applyForJob = async (req, res) => {
         // Resume: upload file buffer to Cloudinary, or use a URL passed in body
         let resume = req.body.resume;
         if (req.file) {
-            const result = await uploadToCloudinary(req.file.buffer, {
-                folder: "job-portal/resumes",
-                resource_type: "raw",
-            });
-            resume = result.secure_url;
+            try {
+                const result = await uploadToCloudinary(req.file.buffer, {
+                    folder: "job-portal/resumes",
+                    resource_type: "raw",
+                });
+                resume = result.secure_url;
+            } catch (cloudinaryError) {
+                console.warn("Cloudinary upload failed, falling back to local disk storage:", cloudinaryError.message || cloudinaryError);
+                const filename = await uploadToLocalDisk(req.file.buffer, req.file.originalname);
+                resume = `${req.protocol}://${req.get("host")}/uploads/${filename}`;
+            }
         }
 
         if (!resume) {

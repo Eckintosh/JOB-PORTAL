@@ -635,27 +635,6 @@ const EmployerProfilePage = () => {
               </div>
             </div>
 
-            {/* Tips Card */}
-            {!isEditing && (
-              <div className="rounded-2xl bg-gradient-to-br from-indigo-50 to-violet-50 border border-indigo-100 p-5">
-                <div className="flex items-center gap-2 mb-3">
-                  <Star className="h-4 w-4 text-indigo-500" />
-                  <p className="text-sm font-bold text-indigo-700">Profile Tips</p>
-                </div>
-                <ul className="space-y-2.5">
-                  {[
-                    "Add a company logo to increase trust",
-                    "Write a compelling company description",
-                    "Keep your contact info up to date",
-                  ].map((tip, i) => (
-                    <li key={i} className="flex items-start gap-2 text-xs text-indigo-600">
-                      <ChevronRight className="h-3.5 w-3.5 shrink-0 mt-0.5" />
-                      {tip}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
           </div>
         </div>
       </div>

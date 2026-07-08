@@ -7,6 +7,7 @@ export const API_PATHS = {
     GET_PROFILE: "/api/auth/profile", // Get logged-in user details
     UPDATE_PROFILE: "/api/user/profile", // Update profile details
     DELETE_RESUME: "/api/user/resume", // Delete Resume details
+    UPLOAD_RESUME: "/api/user/upload-resume", // Upload Resume file
   },
 
   DASHBOARD: {
@@ -21,15 +22,16 @@ export const API_PATHS = {
     UPDATE_JOB: (id) => `/api/jobs/${id}`,
     TOGGLE_CLOSE: (id) => `/api/jobs/${id}/close`,
     DELETE_JOB: (id) => `/api/jobs/${id}`,
-    SAVE_JOB: (id) => `/api/save-jobs/${id}`,
-    UNSAVE_JOB: (id) => `/api/save-jobs/${id}`,
-    GET_SAVED_JOBS: "api/save-jobs/my",
+    SAVE_JOB: (id) => `/api/saved-jobs/${id}`,
+    UNSAVE_JOB: (id) => `/api/saved-jobs/${id}`,
+    GET_SAVED_JOBS: "/api/saved-jobs",
   },
 
   APPLICATIONS: {
-    APPLY_FOR_JOB: (id) => `api/applications/${id}`,
-    GET_APPLICANT: (id) => `api/applications/job/${id}`,
-    UPDATE_STATUS: (id) => `api/applications/${id}/status`,
+    APPLY_FOR_JOB: (id) => `/api/applications/${id}`,
+    GET_APPLICANT: (id) => `/api/applications/job/${id}`,
+    UPDATE_STATUS: (id) => `/api/applications/${id}/status`,
+    GET_MY_APPLICATIONS: "/api/applications/my-applications",
   },
 
   IMAGE: {

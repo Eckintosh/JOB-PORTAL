@@ -2,7 +2,7 @@ const express = require("express");
 const {register, login, getMe} = require("../controllers/authController");
 const { protect } = require("../middlewares/authMiddleware");
 const upload = require("../middlewares/uploadMiddleware");
-const { uploadToCloudinary } = require("../middlewares/uploadMiddleware");
+const { uploadToCloudinary, uploadToLocalDisk } = require("../middlewares/uploadMiddleware");
 
 const router = express.Router();
 
@@ -17,16 +17,24 @@ router.post("/upload-image", upload.single("image"), async (req, res) => {
             return res.status(400).json({ message: "No file uploaded" });
         }
 
-        const result = await uploadToCloudinary(req.file.buffer, {
-            folder: "job-portal/avatars",
-            resource_type: "image",
-            format: "webp",
-            transformation: [{ width: 400, height: 400, crop: "fill", gravity: "face" }],
-        });
+        let imageUrl;
+        try {
+            const result = await uploadToCloudinary(req.file.buffer, {
+                folder: "job-portal/avatars",
+                resource_type: "image",
+                format: "webp",
+                transformation: [{ width: 400, height: 400, crop: "fill", gravity: "face" }],
+            });
+            imageUrl = result.secure_url;
+        } catch (cloudinaryError) {
+            console.warn("Cloudinary upload failed, falling back to local disk storage:", cloudinaryError.message || cloudinaryError);
+            const filename = await uploadToLocalDisk(req.file.buffer, req.file.originalname);
+            imageUrl = `${req.protocol}://${req.get("host")}/uploads/${filename}`;
+        }
 
-        res.status(200).json({ imageUrl: result.secure_url });
+        res.status(200).json({ imageUrl });
     } catch (error) {
-        console.error("Cloudinary upload error:", error);
+        console.error("Upload error:", error);
         res.status(500).json({ message: "Image upload failed", error: error.message });
     }
 }); 

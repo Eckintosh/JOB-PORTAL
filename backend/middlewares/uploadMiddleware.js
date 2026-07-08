@@ -39,5 +39,21 @@ const uploadToCloudinary = (buffer, options = {}) => {
     });
 };
 
+const fs = require("fs");
+const path = require("path");
+
+const uploadToLocalDisk = async (buffer, originalname) => {
+    const uploadsDir = path.join(__dirname, "..", "uploads");
+    if (!fs.existsSync(uploadsDir)) {
+        fs.mkdirSync(uploadsDir, { recursive: true });
+    }
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    const filename = uniqueSuffix + path.extname(originalname);
+    const filePath = path.join(uploadsDir, filename);
+    await fs.promises.writeFile(filePath, buffer);
+    return filename;
+};
+
 module.exports = upload;
 module.exports.uploadToCloudinary = uploadToCloudinary;
+module.exports.uploadToLocalDisk = uploadToLocalDisk;
