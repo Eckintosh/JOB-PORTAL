@@ -4,7 +4,7 @@ import {
   Briefcase, MapPin, DollarSign, Calendar, Clock,
   ArrowLeft, Bookmark, CheckCircle2, ChevronRight,
   FileText, Shield, Sparkles, Building2, ExternalLink,
-  Award, Globe, Mail, Phone, Loader2, Send, X,
+  Award, Globe, Mail, Phone, Loader2, Send, X, User,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import CandidateHeader from "../../components/layout/CandidateHeader";

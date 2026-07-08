@@ -222,7 +222,7 @@ export const EmployerDashboard = () => {
                     <p className="mt-0.5 text-xs text-gray-400">Latest candidate applications</p>
                   </div>
                   <button
-                    onClick={() => navigate("/employer/applicants")}
+                    onClick={() => navigate("/applicants")}
                     className="flex items-center gap-1 text-xs font-semibold text-indigo-600 hover:text-indigo-700 transition-colors"
                   >
                     View all <ArrowRight className="h-3.5 w-3.5" />
@@ -267,28 +267,28 @@ export const EmployerDashboard = () => {
                     icon={Plus}
                     label="Post a New Job"
                     description="Reach thousands of candidates"
-                    onClick={() => navigate("/employer/post-job")}
+                    onClick={() => navigate("/post-job")}
                     color="blue"
                   />
                   <QuickAction
                     icon={Briefcase}
                     label="Manage Jobs"
                     description="Edit, close or review postings"
-                    onClick={() => navigate("/employer/jobs")}
+                    onClick={() => navigate("/manage-jobs")}
                     color="green"
                   />
                   <QuickAction
                     icon={Users}
                     label="View Applicants"
                     description="Review and respond to candidates"
-                    onClick={() => navigate("/employer/applicants")}
+                    onClick={() => navigate("/applicants")}
                     color="purple"
                   />
                   <QuickAction
                     icon={Bell}
                     label="Notifications"
                     description="Stay updated on activity"
-                    onClick={() => navigate("/employer/notifications")}
+                    onClick={() => navigate("/employer-dashboard")}
                     color="orange"
                   />
                 </div>
