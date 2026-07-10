@@ -21,7 +21,7 @@ const GhsIcon = () => (
 const JobDetails = () => {
   const { jobId } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
 
   const [job, setJob] = useState(null);
   const [isSaved, setIsSaved] = useState(false);
@@ -36,16 +36,23 @@ const JobDetails = () => {
   const [customResumeFile, setCustomResumeFile] = useState(null);
   const [isSubmittingApp, setIsSubmittingApp] = useState(false);
 
-  // Fetch job details, check if saved, and check if applied
+  // Fetch job details (public). Only fetch saved/applied status when logged in.
   useEffect(() => {
     const fetchJobDetails = async () => {
       setIsLoading(true);
       try {
-        const [jobRes, savedRes, appRes] = await Promise.allSettled([
-          axiosInstance.get(API_PATHS.JOBS.GET_JOB_BY_ID(jobId)),
-          axiosInstance.get(API_PATHS.JOBS.GET_SAVED_JOBS),
-          axiosInstance.get(API_PATHS.APPLICATIONS.GET_MY_APPLICATIONS),
-        ]);
+        // Job details are public — always fetch
+        const requests = [axiosInstance.get(API_PATHS.JOBS.GET_JOB_BY_ID(jobId))];
+
+        // Saved & application status require authentication
+        if (isAuthenticated) {
+          requests.push(
+            axiosInstance.get(API_PATHS.JOBS.GET_SAVED_JOBS),
+            axiosInstance.get(API_PATHS.APPLICATIONS.GET_MY_APPLICATIONS)
+          );
+        }
+
+        const [jobRes, savedRes, appRes] = await Promise.allSettled(requests);
 
         if (jobRes.status === "fulfilled") {
           setJob(jobRes.value.data);
@@ -55,13 +62,13 @@ const JobDetails = () => {
           return;
         }
 
-        if (savedRes.status === "fulfilled") {
+        if (savedRes && savedRes.status === "fulfilled") {
           const savedJobs = Array.isArray(savedRes.value.data) ? savedRes.value.data : [];
           const savedIds = savedJobs.map((item) => item.job?._id || item.job);
           setIsSaved(savedIds.includes(jobId));
         }
 
-        if (appRes.status === "fulfilled") {
+        if (appRes && appRes.status === "fulfilled") {
           const apps = Array.isArray(appRes.value.data) ? appRes.value.data : [];
           const matchingApp = apps.find((app) => (app.job?._id || app.job) === jobId);
           if (matchingApp) {
@@ -78,10 +85,14 @@ const JobDetails = () => {
     if (jobId) {
       fetchJobDetails();
     }
-  }, [jobId, navigate]);
+  }, [jobId, navigate, isAuthenticated]);
 
-  // Toggle Save Job
+  // Toggle Save Job — requires authentication
   const handleToggleSave = async () => {
+    if (!isAuthenticated) {
+      navigate("/login", { state: { from: { pathname: `/job/${jobId}` } } });
+      return;
+    }
     if (isActionLoading) return;
     setIsActionLoading(true);
 
@@ -101,6 +112,15 @@ const JobDetails = () => {
     } finally {
       setIsActionLoading(false);
     }
+  };
+
+  // Open apply modal — redirect to login if not authenticated
+  const handleApplyClick = () => {
+    if (!isAuthenticated) {
+      navigate("/login", { state: { from: { pathname: `/job/${jobId}` } } });
+      return;
+    }
+    setShowApplyModal(true);
   };
 
   // Submit Application
@@ -241,7 +261,7 @@ const JobDetails = () => {
                 </div>
               ) : (
                 <button
-                  onClick={() => setShowApplyModal(true)}
+                  onClick={handleApplyClick}
                   className="flex-1 sm:flex-initial rounded-xl bg-indigo-600 hover:bg-indigo-700 px-6 py-3 text-sm font-bold text-white shadow-md shadow-indigo-100 transition hover:scale-[1.02] active:scale-100"
                 >
                   Apply for Job

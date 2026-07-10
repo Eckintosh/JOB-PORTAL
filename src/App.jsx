@@ -32,13 +32,17 @@ export const App = () => {
           <Route path="/signup" element={<SignUp/>} />
           <Route path="/login" element={<Login/>} />
 
-          {/* candidate routes */}
+          {/* public candidate routes — no login required to browse */}
           <Route path="/find-jobs" element={<CandidateDashboard/>} />
           <Route path="/job/:jobId" element={<JobDetails/>} />
-          <Route path="/saved-jobs" element={<SavedJobs/>} />
-          <Route path="/profile" element={<UserProfile/>} />
 
-          {/* protected routes needing login */}
+          {/* candidate-only routes — login required */}
+          <Route element={<ProtectedRoute requiredRole="candidate" />}>
+            <Route path="/saved-jobs" element={<SavedJobs/>} />
+            <Route path="/profile" element={<UserProfile/>} />
+          </Route>
+
+          {/* employer-only routes — login required */}
           <Route element={<ProtectedRoute requiredRole="employer" />} >
             <Route path="/employer-dashboard" element={<EmployerDashboard/>} />
             <Route path="/post-job" element={<JobPostingForm/>} />

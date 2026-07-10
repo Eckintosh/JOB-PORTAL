@@ -14,7 +14,7 @@ import {
   ChevronRight,
   Sparkles
 } from "lucide-react"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useNavigate, useLocation } from "react-router-dom"
 import { toast } from "react-hot-toast"
 import axiosInstance from "../../utils/axiosInstance"
 import { API_PATHS } from "../../utils/apiPath"
@@ -22,6 +22,7 @@ import { useAuth } from "../../context/AuthContext"
 
 const Login = () => {
   const navigate = useNavigate()
+  const location = useLocation()
   const { login } = useAuth()
 
   const [formData, setFormData] = useState({
@@ -120,9 +121,12 @@ const Login = () => {
       setFormState(prev => ({ ...prev, loading: false, success: true }))
       toast.success(`Welcome back, ${user.name || "User"}!`)
 
-      // Navigate based on role
+      // Navigate: go back to where the user came from, or default by role
+      const from = location.state?.from?.pathname
       setTimeout(() => {
-        if (user.role === "employer") {
+        if (from && from !== "/login") {
+          navigate(from, { replace: true })
+        } else if (user.role === "employer") {
           navigate("/employer-dashboard")
         } else {
           navigate("/find-jobs")
