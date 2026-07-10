@@ -38,7 +38,11 @@ const ProfileDropdown = ({
                 <div className="hidden sm:block text-left">
                     <p className="text-sm font-medium text-gray-900">{companyName}</p>
                     <p className="text-xs text-gray-500">
-                        {userRole === "jobseeker" ? "Job Seeker" : "Employer"}
+                        {userRole === "jobseeker"
+                          ? "Job Seeker"
+                          : userRole === "employer"
+                          ? "Employer"
+                          : ""}
                     </p>
                 </div>
                 <ChevronDown className="h-4 w-4 text-gray-400" /> 

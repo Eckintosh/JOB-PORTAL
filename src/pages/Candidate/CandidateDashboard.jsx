@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import CandidateHeader from "../../components/layout/CandidateHeader";
 import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPath";
+import { useAuth } from "../../context/AuthContext";
 import moment from "moment";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -50,6 +51,7 @@ const STATUS_CONFIGS = {
 // ─── Main Component ───────────────────────────────────────────────────────────
 const CandidateDashboard = () => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   // Search & Filter state
   const [keyword, setKeyword] = useState("");
@@ -87,11 +89,21 @@ const CandidateDashboard = () => {
         query += `&type=${selectedTypes[0]}`;
       }
 
-      const [jobsRes, savedRes, appRes] = await Promise.allSettled([
-        axiosInstance.get(`${API_PATHS.JOBS.GET_ALL_JOBS}${query}`),
-        axiosInstance.get(API_PATHS.JOBS.GET_SAVED_JOBS),
-        axiosInstance.get(API_PATHS.APPLICATIONS.GET_MY_APPLICATIONS),
-      ]);
+      const requests = [
+        axiosInstance.get(`${API_PATHS.JOBS.GET_ALL_JOBS}${query}`)
+      ];
+
+      if (isAuthenticated) {
+        requests.push(
+          axiosInstance.get(API_PATHS.JOBS.GET_SAVED_JOBS),
+          axiosInstance.get(API_PATHS.APPLICATIONS.GET_MY_APPLICATIONS)
+        );
+      }
+
+      const results = await Promise.allSettled(requests);
+      const jobsRes = results[0];
+      const savedRes = isAuthenticated ? results[1] : null;
+      const appRes = isAuthenticated ? results[2] : null;
 
       // Handle Jobs response
       if (jobsRes.status === "fulfilled") {
@@ -102,14 +114,14 @@ const CandidateDashboard = () => {
       }
 
       // Handle Saved Jobs response
-      if (savedRes.status === "fulfilled") {
+      if (savedRes && savedRes.status === "fulfilled") {
         const savedData = Array.isArray(savedRes.value.data) ? savedRes.value.data : [];
         const ids = new Set(savedData.map((item) => item.job?._id || item.job));
         setSavedJobIds(ids);
       }
 
       // Handle My Applications response
-      if (appRes.status === "fulfilled") {
+      if (appRes && appRes.status === "fulfilled") {
         const appData = Array.isArray(appRes.value.data) ? appRes.value.data : [];
         const appMap = {};
         appData.forEach((app) => {
@@ -126,7 +138,7 @@ const CandidateDashboard = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [page, keyword, location, selectedCategory, selectedTypes]);
+  }, [page, keyword, location, selectedCategory, selectedTypes, isAuthenticated]);
 
   useEffect(() => {
     fetchDashboardData();
@@ -134,6 +146,10 @@ const CandidateDashboard = () => {
 
   // ── Toggle Bookmark Saved Job ──────────────────────────────────────────────
   const handleToggleSave = async (jobId) => {
+    if (!isAuthenticated) {
+      navigate("/login", { state: { from: { pathname: "/find-jobs" } } });
+      return;
+    }
     if (isActionLoading) return;
     setIsActionLoading(true);
     const isSaved = savedJobIds.has(jobId);
